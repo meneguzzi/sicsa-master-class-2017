@@ -9,6 +9,21 @@
 \usepackage{letltxmacro}
 \usepackage{algorithm, algpseudocode}
 
+\lstdefinelanguage
+{PDDL}[]{LISP}
+{alsoletter={:,?}, 
+morekeywords={define,domain,problem,:domain,:extends,:requirements,:strips,:equality,:typing,:conditional-effects,:strips,:types,:objects,:negative-preconditions,:disjunctive-preconditions,:existential-preconditions,:universal-preconditions, :constants,:domain-variables,:timeless,:domain-axioms,:action-expansions,:predicates,:action,:parameters,:precondition,:effect,:fluents,:primary-effect,:side-effect,:init,:goal,when,not,forall,exists,goal-type,choice,forsome,in-context}}
+%[[⟨list of required aspects (keywordcomments,texcs,etc.)⟩]]
+
+\lstdefinelanguage
+{SHOP}[]{LISP}
+{alsoletter={:,?,!}, 
+morekeywords={defdomain,defproblem,:domain,:method,:operator
+:goal,when,not,forall,exists,goal-type,choice,forsome,in-context}}
+
+
+\lstset{language=PDDL}
+
 \newcommand{\todo}[1]{ {\color{red} #1} }
 
 \def\masterclass{1}
@@ -93,7 +108,7 @@
 			\end{column}
 			\begin{column}[t]{0.5\textwidth}
 				Domain Theory (PRAP)
-				\lstinputlisting[basicstyle=\fontsize{4}{4.5}\selectfont,language=LISP]{examples/easy_ipc_grid.pddl.txt}
+				\lstinputlisting[basicstyle=\fontsize{4}{4.5}\selectfont,language=PDDL]{examples/easy_ipc_grid.pddl.txt}
 			\end{column}
 		\end{columns}
 	\end{frame}
@@ -182,8 +197,23 @@
 		\end{itemize}
 	\end{frame}
 
-	\begin{frame}[c]\frametitle{Roboschool}
-		{\color{red} Add Roboschool formalization}
+	\begin{frame}[t]\frametitle{Roboschool Formalization in PDDL}
+		\begin{columns}
+			\begin{column}[t]{0.6\textwidth}
+			\lstinputlisting[basicstyle=\fontsize{5}{5.5}\selectfont,language=PDDL]{examples/roboschool.pddl.txt}
+			\end{column}
+			\begin{column}[t]{0.4\textwidth}
+			\lstinputlisting[basicstyle=\fontsize{3.5}{3.8}\selectfont,language=PDDL]{examples/pb2.pddl.txt}
+			\end{column}
+		\end{columns}
+	\end{frame}
+	
+	\begin{frame}[c]\frametitle{Roboschool PDDL Plan}
+		\lstinputlisting[basicstyle=\fontsize{6}{6.5}\selectfont,language=PDDL]{examples/sas_plan.txt}
+	\end{frame}
+	
+	\begin{frame}[c]\frametitle{Goals in PDDL}
+		\todo{Add other goals in PDDL}
 	\end{frame}
 
     \begin{frame}[c]\frametitle{Goal Recognition Problem}
@@ -1065,20 +1095,21 @@
 \if\masterclass1
 \section{Goal Recognition in Incomplete Domains}
 
-\if\masterclass0
-	\begin{frame}[c]\frametitle{Masterclass}
-		\begin{center}
-			\large
-			\todo{Come to the master class in Aberdeen for this!!}
-		\end{center}
-	\end{frame}
-\fi
-
-\if\masterclass1
 \begin{frame}[c]\frametitle{Motivation}
 	\todo{This goes into the masterclass}
 \end{frame}
-\fi
+
+\begin{frame}[c]\frametitle{Formalization}
+	
+\end{frame}
+
+\begin{frame}[c]\frametitle{Problem Example}
+	
+\end{frame}
+
+\begin{frame}[c]\frametitle{Algorithm Example}
+	
+\end{frame}
 
 \fi
 
@@ -1741,6 +1772,7 @@
 	\end{itemize}
 \end{frame}
 
+\if\masterclass1
 \begin{frame}[c]\frametitle{Master Class Plug}
 	If this talk was interesting and you want to know more, please come to:\\[2em]
 	\begin{center}
@@ -1756,6 +1788,8 @@
 		\item Much more
 	\end{itemize}
 \end{frame}
+
+\fi
 
 
 
