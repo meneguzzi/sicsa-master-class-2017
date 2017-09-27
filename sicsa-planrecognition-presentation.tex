@@ -187,7 +187,7 @@ morekeywords={defdomain,defproblem,:domain,:method,:operator
 			\end{itemize}
 		\end{definition}
 		\begin{itemize}
-			\item Actions $a \in \mathcal{A}$ are tuples $a = \langle \mathit{pre}(a), \mathit{eff}(a), \mathit{cost}(a) \rangle$
+			\item Actions $a \in \mathcal{A}$ are tuples $a = \langle \mathit{name}, \mathit{pre}(a), \mathit{eff}(a), \mathit{cost}(a) \rangle$
 			\item Facts $\Sigma$ can be modeled in a variety of ways:
 			\begin{itemize}
 				\item As a logic language (restricted FOL): \\states are truth assignments
@@ -218,7 +218,7 @@ morekeywords={defdomain,defproblem,:domain,:method,:operator
 
     \begin{frame}[c]\frametitle{Goal Recognition Problem}
 		\begin{definition}[\textbf{Goal Recognition Problem}]
-			A goal recognition problem is a tuple $P = \langle \Xi, \mathcal{I}, \mathcal{G}, \mathbf{O} \rangle$, where:
+			A goal recognition problem is a tuple $P_{G} = \langle \Xi, \mathcal{I}, \mathcal{G}, \mathbf{O} \rangle$, where:
        	\begin{itemize}
        		\item $\Xi = \langle \Sigma, \mathcal{A} \rangle$ is the domain definition (facts and actions) ;
        		\item $\mathcal{I} \subseteq \Sigma$ is the initial state;
@@ -236,11 +236,19 @@ morekeywords={defdomain,defproblem,:domain,:method,:operator
  
 	\begin{frame}[c]\frametitle{Plan Recognition Problem}
 		\begin{definition}[Plan Recognition Problem]
-			\todo{Figure out formalization}
+			A plan recognition problem is a tuple $P_{P} = \langle \Xi, \mathcal{M}, \mathcal{I}, \mathbf{O} \rangle$, where:
+	       	\begin{itemize}
+	       		\item $\Xi = \langle \Sigma, \mathcal{A} \rangle$ is the domain definition (facts and actions) ;
+				\item $\mathcal{M}$ is a plan-library containing task-decomposing methods of the form $\langle t, \langle t_1, \dots t_n \rangle \rangle$ (implicitly defining a set $\mathcal{T}$ of task symbols); and
+	       		\item $\mathcal{I} \subseteq \Sigma$ is the initial state;
+	       		\item $\mathbf{O}$ is a sequence $\langle o_1, \dots o_n \rangle$ of observations, where $o_i \in \mathcal{A}$
+	       	\end{itemize}
+			Here, $\mathcal{T}$ comprises non-primitive tasks and primitive tasks corresponding to the names of actions $a \in \mathcal{A}$.
 		\end{definition}
 		
 		\begin{itemize}
-			\item Requires a lot more domain knowledge
+			\item The solution to a plan recognition goal is the top level task $t_{I} \in \mathcal{T}$ that generated the full decomposition corresponding to the observations in $\mathcal{O}$
+			\item Requires a lot more domain knowledge (i.e. the plan-library)
 			\item This is what I will refer to as classical plan recognition 
 		\end{itemize}
 	\end{frame}
@@ -309,14 +317,14 @@ morekeywords={defdomain,defproblem,:domain,:method,:operator
 	
     \begin{frame}{Background: Planning and Landmarks}
 		\begin{definition} [\textbf{Planning}]
-			\textit{A planning instance is represented by a triple $\Pi = \langle \Xi, \mathcal{I}, G\rangle$, in which:
+			A planning instance is represented by a triple $\Pi = \langle \Xi, \mathcal{I}, G\rangle$, in which:
 			\begin{itemize}
 				\item $\Xi$ $=$ $\langle$$\Sigma$, $\mathcal{A}$$\rangle$ is the \textbf{domain definition}, and consists of a finite set of \textbf{facts} $\Sigma$ and a finite set of \textbf{actions} $\mathcal{A}$ (action costs $=$ 1);
 				\item $\mathcal{I}$ and $G$ represent the \textbf{planning problem}, in which $\mathcal{I}$ $\subseteq$ $\Sigma$ is the \textbf{initial state}, and $G$ $\subseteq$ $\Sigma$ is the \textbf{goal state}.
-			\end{itemize}}
+			\end{itemize}
 		\end{definition}
 		\begin{definition}[\textbf{Landmarks}]
-			\textit{Given a planning instance $\Pi = \langle \Xi, \mathcal{I}, G\rangle$, a \textbf{fact} (or \textbf{action}) $L$ is a landmark in $\Pi$ iff $L$ 	must be \textbf{satisfied} (or \textbf{executed}) at some point along all valid plans that achieve $G$ from $\mathcal{I}$.}
+			Given a planning instance $\Pi = \langle \Xi, \mathcal{I}, G\rangle$, a \textbf{fact} (or \textbf{action}) $L$ is a landmark in $\Pi$ iff $L$ 	must be \textbf{satisfied} (or \textbf{executed}) at some point along all valid plans that achieve $G$ from $\mathcal{I}$.
 		\end{definition}
 		\begin{itemize}
 			\item To extract landmarks and their ordering, we use an algorithm developed by Hoffman \emph{et al.} {\footnotesize (Ordered Landmarks in Planning. JAIR, 2004)}.
@@ -784,7 +792,24 @@ morekeywords={defdomain,defproblem,:domain,:method,:operator
 	
 	\if\masterclass1
 	\begin{frame}[c]\frametitle{Extracting Landmarks in Continuous Domains}
-		\todo{Finish this for the masterclass}
+		\begin{columns}
+			\begin{column}{0.5\textwidth}
+				\onslide<1->{
+					1. Partition landmarks using wall aligned squares. \\
+				}
+				\onslide<2->{
+					2. Recursively divide squares with multiple goals using the mid-point in $x,y$ between two randomly selected goals.
+				}
+			\end{column}
+			\begin{column}{0.5\textwidth}
+				\only<1>{
+					\includegraphics[width=\textwidth]{fig/landmarks-1.pdf}
+				}
+				\only<2>{
+					\includegraphics[width=\textwidth]{fig/continuous-landmark-example.pdf}
+				}
+			\end{column}
+		\end{columns}
 	\end{frame}
 	\fi
 
