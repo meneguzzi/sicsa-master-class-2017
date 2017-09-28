@@ -1,0 +1,2 @@
+; All green objects in b3
+(:goal (and (in p2 b3) (in p7 b3)))

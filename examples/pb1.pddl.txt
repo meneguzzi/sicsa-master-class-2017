@@ -1,0 +1,2 @@
+; All triangles in b1
+(:goal (and (in p3 b1) (in p4 b1)))

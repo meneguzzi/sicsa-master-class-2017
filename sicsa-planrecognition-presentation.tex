@@ -7,7 +7,10 @@
 \usepackage{mathtools}
 \usepackage{listings}
 \usepackage{letltxmacro}
-\usepackage{algorithm, algpseudocode}
+\usepackage[noend]{algorithm, algpseudocode}
+
+\usepackage{mathtools}
+\newcommand\myeq{\stackrel{\mathclap{\normalfont\mbox{def}}}{=}}
 
 \lstdefinelanguage
 {PDDL}[]{LISP}
@@ -203,19 +206,46 @@ morekeywords={defdomain,defproblem,:domain,:method,:operator
 			\lstinputlisting[basicstyle=\fontsize{5}{5.5}\selectfont,language=PDDL]{examples/roboschool.pddl.txt}
 			\end{column}
 			\begin{column}[t]{0.4\textwidth}
-			\lstinputlisting[basicstyle=\fontsize{3.5}{3.8}\selectfont,language=PDDL]{examples/pb2.pddl.txt}
+			\lstinputlisting[basicstyle=\fontsize{3.5}{3.8}\selectfont,language=PDDL]{examples/pb2_full.pddl.txt}
 			\end{column}
 		\end{columns}
 	\end{frame}
 	
 	\begin{frame}[c]\frametitle{Roboschool PDDL Plan}
-		\lstinputlisting[basicstyle=\fontsize{6}{6.5}\selectfont,language=PDDL]{examples/sas_plan.txt}
+		\lstinputlisting[basicstyle=\fontsize{6}{6.5}\selectfont,language=PDDL]{examples/pb2_plan.txt}
 	\end{frame}
 	
 	\begin{frame}[c]\frametitle{Goals in PDDL}
-		\todo{Add other goals in PDDL}
+		\begin{columns}
+			\begin{column}[t]{0.3\textwidth}
+			\lstinputlisting[basicstyle=\fontsize{5}{5.5}\selectfont,language=PDDL]{examples/pb1.pddl.txt}
+			 			\lstinputlisting[basicstyle=\fontsize{5}{5.5}\selectfont,language=PDDL]{examples/pb1_plan.txt}
+			\end{column}
+			\begin{column}[t]{0.3\textwidth}
+			\lstinputlisting[basicstyle=\fontsize{5}{5.5}\selectfont,language=PDDL]{examples/pb2.pddl.txt}
+			 			\lstinputlisting[basicstyle=\fontsize{5}{5.5}\selectfont,language=PDDL]{examples/pb2_plan.txt}
+			\end{column}
+			\begin{column}[t]{0.3\textwidth}
+			\lstinputlisting[basicstyle=\fontsize{5}{5.5}\selectfont,language=PDDL]{examples/pb3.pddl.txt}
+			 			\lstinputlisting[basicstyle=\fontsize{5}{5.5}\selectfont,language=PDDL]{examples/pb3_plan.txt}
+			\end{column}
+		\end{columns}
+		% \begin{columns}
+% 			\begin{column}[t]{0.3\textwidth}
+% 			\lstinputlisting[basicstyle=\fontsize{5}{5.5}\selectfont,language=PDDL]{examples/pb4.pddl.txt}
+% 			 			\lstinputlisting[basicstyle=\fontsize{5}{5.5}\selectfont,language=PDDL]{examples/pb4_plan.txt}
+% 			\end{column}
+% 			\begin{column}[t]{0.3\textwidth}
+% 			\lstinputlisting[basicstyle=\fontsize{5}{5.5}\selectfont,language=PDDL]{examples/pb5.pddl.txt}
+% 			 			\lstinputlisting[basicstyle=\fontsize{5}{5.5}\selectfont,language=PDDL]{examples/pb5_plan.txt}
+% 			\end{column}
+% 			\begin{column}[t]{0.3\textwidth}
+% 			\lstinputlisting[basicstyle=\fontsize{5}{5.5}\selectfont,language=PDDL]{examples/pb6.pddl.txt}
+% 			 			\lstinputlisting[basicstyle=\fontsize{5}{5.5}\selectfont,language=PDDL]{examples/pb6_plan.txt}
+% 			\end{column}
+% 		\end{columns}
 	\end{frame}
-
+	
     \begin{frame}[c]\frametitle{Goal Recognition Problem}
 		\begin{definition}[\textbf{Goal Recognition Problem}]
 			A goal recognition problem is a tuple $P_{G} = \langle \Xi, \mathcal{I}, \mathcal{G}, \mathbf{O} \rangle$, where:
@@ -262,11 +292,246 @@ morekeywords={defdomain,defproblem,:domain,:method,:operator
         This observation sequence can be either \textbf{partial} or \textbf{full}.\\
             \todo{Observations as actions, and states, animation}
 	\end{frame}
+	
+\subsection{Planning Heuristics}
+	
+	\begin{frame}[c]\frametitle{Solving Planning Problems}
+		Actions $a \in \mathcal{A}$ are tuples $a = \langle \mathit{name}, \mathit{pre}(a), \mathit{eff}(a), \mathit{cost}(a) \rangle$.
+		They induce a state transition system such that:
+		\begin{itemize}
+			\item $\mathit{eff}(a)$ constitute a set of negative (delete) and positive (add) effects: $\mathit{eff}^{+}(a)$, $\mathit{eff}^{-}(a)$
+			\item an action $a$ is applicable to a state $s$ iff $s \models \mathit{pre}(a)$
+			\item applying $a$ to $s$ ($\gamma(s,a)$) yields a state $s' = (s / \mathit{eff}^{-}(a)) \cup  \mathit{eff}^{+}(a)$, \\i.e. it is such that $s' \models \mathit{eff}(a)$
+		\end{itemize}
+		The solution to a planning problem $\Pi = \langle \Xi, \mathcal{I}, G\rangle$ is a plan $\pi = \langle a_1, \dots, a_n\rangle$ such that:
+		\begin{itemize}
+			\item $\mathcal{I} \models \mathit{pre}(a_1)$
+			\item $\gamma(\gamma(\dots \gamma(I, a_1),\dots), a_n) \models G$
+			\item The cost of $\pi$ is $\sum_{i=1}^{n}\mathit{cost}(a_i)$
+		\end{itemize}
+	\end{frame}
+	
+	\begin{frame}[c]\frametitle{From STRIPS Problem P to state model S(P)}
+		Most modern planning algorithms convert a planning problem $\Pi = \langle \Xi, \mathcal{I}, G\rangle$, with $\Xi = \langle \Sigma, \mathcal{A} \rangle$ into one of state space search, where:
+		\begin{itemize}
+			\item the states $s \in S$ are \textbf{collections of atoms} from $\Sigma$
+			\item the initial state $s_0 = I$
+			\item the goal states $S_g$ are such that $\forall{s \in S_g} s \models G$
+			\item the applicable actions for a state $s$ in $A(s)$ are actions from $a \in  \mathcal{A}$ such that $s \models \mathit{pre}(a)$
+			\item the successor state $s' = (s / \mathit{eff}^{-}(a)) \cup  \mathit{eff}^{+}(a)$
+			\item all action costs are assumed to be 1
+		\end{itemize}
+		How do we solve these problems?
+	\end{frame}
+	
+	\begin{frame}[c]\frametitle{Heuristic Search Planning}
+		\begin{itemize}
+			\item Explicitly \textbf{searches} graph associated with model $S(P)$ with \textbf{heuristic} $h(s)$ that estimates cost from $s$ to goal
+			\item \textbf{Key idea:} Heuristic $h$ extracted automatically from problem $\Pi$
+			\item This is the mainstream approach in classical planning (and other forms of planning as well), enabling the solution of problems over \textbf{huge spaces} 
+		\end{itemize}
+	\end{frame}
+	
+	\begin{frame}[c]\frametitle{Heuristic Graph Search}
+		\begin{algorithmic}[1]
+			\small
+			\Function{graphSearch}{problem $p$, strategy $s$}
+			\State{$\mathit{closed} \gets \{ \}$}\Comment{We now keep a list of explored states}
+		    \State{$\mathit{frontier}.\Call{add}{new Node(\mathit{p.initial})}$}
+			   \Loop
+			      \If{$\mathit{frontier}$ is empty}
+					\State{\textbf{return} $\mathbf{fail}$}
+				  \EndIf
+				  \State{$n \gets s.\Call{removeChoice}{\mathit{frontier}}$}
+				  \State{$\mathit{closed}.\Call{add}{n.state}$}\Comment{Where we keep states we already visisted}
+				  \If{$\Call{p.goalTest}{\mathit{n.state}}$}
+					\State{\textbf{return} $\Call{getPath}{n}$}
+				  \EndIf
+				  \ForAll{$a \in p.\Call{actions}{n}$}
+				    \State{$n' \gets a.\Call{result}{\mathit{n.state}}$}
+				    \If{$\mathit{n'.state} \notin \mathit{closed}$}
+					\State{$\mathit{frontier}.\Call{add}{n'}$} \Comment{And only explore states we haven't visited}
+					\EndIf
+				  \EndFor
+			   \EndLoop
+			\EndFunction
+		\end{algorithmic}
+	\end{frame}
+	
+	\begin{frame}[c]\frametitle{Heuristics}
+		\begin{itemize}
+			\item A heuristic function \textbf{estimates} the true cost of reaching a goal $G$
+			\item Only requirement for an heuristic $h(n)$ to \textbf{work} with $A^{*}$ is that $h(G)=0$
+			\begin{itemize}
+				\item Though this is \textbf{not} necessarily \textbf{optimal}
+			\end{itemize}
+		\end{itemize}
+	\end{frame}
+
+\newcommand\puzzle[9]{
+			{\Large
+			\begin{tabular}{|m{.5em}|m{.5em}|m{.5em}|}
+			\hline
+			#1 & #2 & #3\\
+			\hline
+			#4 & #5 & #6\\
+			\hline
+			#7 & #8 & #9\\
+			\hline
+			\end{tabular}
+			}
+}
+
+	\begin{frame}[c]\frametitle{Heuristic Functions}
+		\begin{columns}
+		\begin{column}{0.5\textwidth}
+			\begin{center}
+				\puzzle{7}{2}{4}
+				       {5}{ }{6} 
+				       {8}{3}{1}\\[1em]
+				Start State
+			\end{center}
+		\end{column}
+		\begin{column}{0.5\textwidth}
+			\begin{center}
+				\puzzle{1}{2}{3}
+				       {4}{5}{6} 
+				       {7}{8}{ }\\[1em]
+				Goal State
+			\end{center}
+		\end{column}
+		\end{columns}
+		\begin{itemize}
+			\item Heuristics
+			\begin{itemize}
+				\item<2-> The number of misplaced tiles -- \textbf{Hamming distance} ($h_1 = 7$)
+				\item<2-> The sum of distances of the tiles from their goal positions -- \textbf{Manhattan distance} ($h_2 = 16$)  
+			\end{itemize}
+			\item<2-> Are they admissible?
+		\end{itemize}
+	\end{frame}
+
+	\begin{frame}[c]\frametitle{Creating Heuristics}
+		\begin{itemize}
+			\item Ignore specific preconditions of actions (need some domain knowledge)
+			\item Consider the sliding blocks from search
+		\end{itemize}
+		\lstinputlisting[basicstyle=\fontsize{8}{8.5}\selectfont,language=PDDL]{examples/sliding_blocks.pddl.txt}
+		\begin{itemize}
+			\item If we remove \texttt{(blank s2)}, we are left with Manhattan distance
+		\end{itemize}
+	\end{frame}
+	
+	\begin{frame}[c]\frametitle{Domination}
+		\begin{itemize}
+			\item h2 is always greater than h1. 
+			\begin{itemize}
+				\item It therefore dominates h1 (it is a tighter bound on the actual cost)
+				\item And is more efficient
+			\end{itemize}
+			\item How can we invent good heuristics?
+			\item Typically, by \textbf{relaxing} the problem.
+		\end{itemize}
+	\end{frame}
+
+	\begin{frame}[c]\frametitle{Heuristics for Classical Planning}
+		\begin{itemize}
+			\item Key development in planning in the 90’s, is automatic extraction of \textbf{heuristic functions} to guide search for plans 
+			\item The general idea was known: heuristics often \textbf{explained} as \textbf{optimal} cost functions of \textbf{relaxed} (simplified) problems (Minsky 61; Pearl 83)
+			\item Most common relaxation in planning, $P^+$, obtained by dropping \textbf{delete-lists} from ops in P. If $c^*(P)$ is optimal cost of P, then
+			$$h^{+}(P) \myeq c^{*}(P^{+})$$
+			\item Heuristic $h^{+}$ \textbf{intractable} but easy to \textbf{approximate}; i.e. 
+			\begin{itemize}
+				\item computing \textbf{optimal} plan for $P^{+}$ is \textbf{intractable}, but 
+				\item computing a non-optimal plan for $P^{+}$ \textbf{(relaxed plan)} easy 
+			\end{itemize}
+			\item State-of-the-art heuristics as in FF or LAMA still rely on $P^{+}$
+		\end{itemize}
+	\end{frame}
+	
+	\begin{frame}[c]\frametitle{Additive Heuristic}
+		\begin{itemize}
+			\item For all \textbf{atoms} $p$:
+			$$h(p;s) \myeq \begin{cases}
+							0 & \mathit{if} p \in s, \mathit{else} \\
+							\min_{a \in O}\left[ \mathit{cost}(a) + h(Pre(a); s) \right]
+							\end{cases}$$
+			\item For \textbf{sets} of atoms $C$, assume \textbf{independence}:
+			$$h(C;s) \myeq \sum_{r \in C} h(r; s)$$
+			\item Resulting \textbf{heuristic function} $h_{add}(s)$:
+			$$h_{\mathit{add}}(s) \myeq h(Goal; s)$$
+			\item Heuristic not admissible, but informative and fast
+		\end{itemize}
+	\end{frame}
+	
+	\begin{frame}[c]\frametitle{Max Heuristic}
+		\begin{itemize}
+			\item For all \textbf{atoms} $p$:
+			$$h(p;s) \myeq \begin{cases}
+							0 & \mathit{if} p \in s, \mathit{else} \\
+							\min_{a \in O}\left[ 1 + h(Pre(a); s) \right]
+							\end{cases}$$
+			\item For \textbf{sets} of atoms $C$, assume \textbf{independence}:
+			$$h(C;s) \myeq \max_{r \in C} h(r; s)$$
+			\item Resulting \textbf{heuristic function} $h_{add}(s)$:
+			$$h_{\mathit{max}}(s) \myeq h(Goal; s)$$
+			\item Heuristic admissible, but not very informative
+		\end{itemize}
+	\end{frame}
+	
+	\begin{frame}[c]\frametitle{Max Heuristic and (Relaxed) Planning Graph}
+		\begin{itemize}
+			\item Build reachability graph $P_0, A_0, P_1, A_1, \dots$
+		\end{itemize}
+		\begin{center}
+		\includegraphics[width=.5\textwidth]{fig/rpg-example.pdf}
+		\end{center}
+		\begin{itemize}	
+			\item Graph implicitly \textbf{represents} max heuristic
+			$$h_{\mathit{max}}(s) = \min~i~\mathit{such~that}~G \subseteq P_{i}$$
+		\end{itemize}
+	\end{frame}
+	
+	\begin{frame}[c]\frametitle{Relaxed Planning Graph}
+		\begin{itemize}
+			\item A variation of the Planning Graph from Graphplan
+			\begin{itemize}
+				\item Alternating fact and action levels
+				\item Ignores negative effects from actions, no mutex relations
+			\end{itemize}
+			\item Fact level $F_0$ contains the facts that are true in the initial state, 
+			\item Action level $A_0$ contains actions whose preconditions are reached from $F_0$,
+			\item $F_1$ contains $F_0$ plus the add effects of the actions in $A_0$, and so on.
+		\end{itemize}
+	\end{frame}
+
+	\begin{frame}[c]\frametitle{RPG Construction}
+		\begin{algorithmic}[1]
+			\small
+		    \Function{BuildFullRPG}{$\Xi$, $\mathcal{I}$, $G$}
+		    		\State $i \gets 0$
+		    		\State \textsc{RPG.FactLevel$_{0}$} $\gets \mathcal{I}$
+		    		\While{$G \nsubseteq$ \textsc{RPG.FactLevel$_{i}$}}
+		    			\State \textsc{RPG.ActionLevel$_{i}$} $\gets \lbrace a \in \mathcal{A} \mid$ \textit{pre}($a$) $\in$ \textsc{RPG.FactLevel$_{i}$}$\rbrace$
+		    			\State \textsc{RPG.FactLevel$_{i+1}$} $\gets$ \textsc{RPG.FactLevel$_{i}$} $\cup$ \textit{eff}($a$)$^+$, $\forall a \in$ \textsc{RPG.ActionLevel$_{i}$}
+					\If{\textsc{RPG.FactLevel$_{i+1}$} $\equiv$ \textsc{RPG.FactLevel$_{i}$}}
+						\State \textbf{return} $G$ \textsc{unreachable} \Comment{\textit{The algorithm fails if at some point before reaching the facts of the goal no new fact level is added in the graph.}}
+					\EndIf
+		    			\State $i \gets i + 1$
+		    		\EndWhile
+		        \State \textbf{return} \textsc{RPG}
+		    \EndFunction
+		\end{algorithmic}
+	\end{frame}
+	
+	\begin{frame}[c]\frametitle{Blocks World Problem}
+		
+	\end{frame}
 \fi
 
 % @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
 	
-	\section{Goal Recognition as reasoning over Heuristics}
+\section{Goal Recognition as reasoning over Heuristics}
 
 \if\masterclass1
 	\begin{frame}[c]\frametitle{Goal Recognition}

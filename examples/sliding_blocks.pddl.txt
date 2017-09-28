@@ -1,0 +1,7 @@
+	(:action slide
+	    :parameters (?t - tile ?s1 ?s2 - slot)
+	    :precondition (and (on ?t ?s1) (blank ?s2) 
+		                   (adjacent ?s1 ?s2) )
+	    :effect (and (on ?t ?s2) (blank ?s1) 
+		             (not (on ?t ?s1)) (not (blank ?s2)) )
+	)
