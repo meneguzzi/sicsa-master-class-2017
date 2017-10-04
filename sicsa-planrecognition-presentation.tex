@@ -230,6 +230,17 @@ morekeywords={defdomain,defproblem,:domain,:method,:operator
 		\end{columns}
 	\end{frame}
 	
+	\begin{frame}[c]\frametitle{Automated Planning: Plans}
+		\begin{definition} [\textbf{Planning}]
+			A planning instance is represented by a triple $\Pi = \langle \Xi, \mathcal{I}, G\rangle$, in which:
+			\begin{itemize}
+				\item $\Xi = \langle \Sigma, \mathcal{A} \rangle$ is the \textbf{domain definition}, and consists of a finite set of \textbf{facts} $\Sigma$ and a finite set of \textbf{actions} $\mathcal{A}$ (action costs typically 1);
+				\item $\mathcal{I} \subseteq \Sigma$ and $G \subseteq \Sigma$ represent the \textbf{planning problem}, in which $\mathcal{I} \subseteq \Sigma$ is the \textbf{initial state}, and $G \subseteq \Sigma$ is the \textbf{goal state}.
+			\end{itemize}
+		\end{definition}
+		\todo{Complete this with the notion of a plan}
+	\end{frame}
+	
 	\begin{frame}[c]\frametitle{Roboschool PDDL Plan}
 		\lstinputlisting[basicstyle=\fontsize{6}{6.5}\selectfont,language=PDDL]{examples/pb2_plan.txt}
 	\end{frame}
@@ -344,7 +355,65 @@ morekeywords={defdomain,defproblem,:domain,:method,:operator
 		\end{columns}
         
 	\end{frame}
+\fi
+
+% @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
 	
+\section{Goal Recognition as reasoning over Heuristics}
+
+\section{Motivation and Background}
+\if\masterclass1
+	% \begin{frame}[c]\frametitle{Goal Recognition}
+% 		Background on other PRAP approaches:
+% 		\begin{itemize}
+% 			\item Ramirez and Geffner
+% 			\item Martin
+% 			\item Sohrabi
+% 		\end{itemize}
+% 	\end{frame}
+	\begin{frame}[c]\frametitle{Motivation}
+		\todo{Motivation}
+	\end{frame}
+	
+	\begin{frame}[c]\frametitle{Previous Work: Ramirez and Geffner}
+		\begin{itemize}
+			\item First approaches to goal recognition: Plan Recognition as Planning (PRAP)
+			\item Probabilistic model aims to compute $P(G \mid O)$
+			\item Following Bayes Rule $P(G \mid O) = \alpha P(O \mid G) P(G)$
+			\item Given $P(G)$ as a prior, key bottleneck is computing $P(O \mid G)$
+			\begin{itemize}
+				\item In their work $P(O \mid G)$ is computed in terms of a cost difference $c(G,O) - c(G,\bar{O})$
+				\item Computational cost is \textbf{two planner calls per goal hypothesis}
+				\item For online recognition: two planner calls per goal hypothesis \textbf{per observation}
+			\end{itemize}
+			\item Some conclusions challenged for path planning domains\\ (Masters and Sardina 2017)
+		\end{itemize}
+	\end{frame}
+	\begin{frame}[c]\frametitle{Previous Work: E-Martín et al.}
+		
+	\end{frame}
+	\begin{frame}[c]\frametitle{Previous Work: Sohrabi et al.}
+		
+	\end{frame}
+\fi
+	
+    \begin{frame}{Overview}
+       	\begin{itemize}
+			\item In this work, we use a \textbf{planning domain definition} to represent agent behavior and environment properties;
+			\item Previous approaches involve multiple calls to a modified planner.
+			\item Our main contribution is twofold:
+				\begin{itemize}
+					\item We \textbf{obviate the need to execute a planner multiple times} for recognizing goals; and
+					\item We develop novel goal recognition heuristics that \textbf{use planning landmarks}.
+				 \end{itemize}
+			% \item We evaluate our approaches against the fastest and most accurate approach of Ramírez and Geffner ({\footnotesize Plan Recognition as Planning. IJCAI, 2009}) over \textbf{15 planning domains};
+			\item We show that our approaches are \textbf{more accurate} and \textbf{orders of magnitude faster} than Ramírez and Geffner's approach.
+		\end{itemize}
+    \end{frame}
+
+\if\masterclass1
+	
+
 \subsection{Planning Heuristics}
 	
 	\begin{frame}[c]\frametitle{Solving Planning Problems}
@@ -579,58 +648,8 @@ morekeywords={defdomain,defproblem,:domain,:method,:operator
 	\begin{frame}[c]\frametitle{Blocks World Problem}
 		
 	\end{frame}
-\fi
 
-% @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
-	
-\section{Goal Recognition as reasoning over Heuristics}
-
-\if\masterclass1
-	\begin{frame}[c]\frametitle{Goal Recognition}
-		Background on other PRAP approaches:
-		\begin{itemize}
-			\item Ramirez and Geffner
-			\item Martin
-			\item Sohrabi
-		\end{itemize}
-	\end{frame}
-	\begin{frame}[c]\frametitle{Previous Work: Ramirez and Geffner}
-		\if\masterclass1
-		\todo{Move this to the background}
-		\fi
-		\begin{itemize}
-			\item First approaches to goal recognition: Plan Recognition as Planning (PRAP)
-			\item Probabilistic model aims to compute $P(G \mid O)$
-			\item Following Bayes Rule $P(G \mid O) = \alpha P(O \mid G) P(G)$
-			\item Given $P(G)$ as a prior, key bottleneck is computing $P(O \mid G)$
-			\begin{itemize}
-				\item In their work $P(O \mid G)$ is computed in terms of a cost difference $c(G,O) - c(G,\bar{O})$
-				\item Computational cost is \textbf{two planner calls per goal hypothesis}
-				\item For online recognition: two planner calls per goal hypothesis \textbf{per observation}
-			\end{itemize}
-			\item Some conclusions challenged for path planning domains\\ (Masters and Sardina 2017)
-		\end{itemize}
-	\end{frame}
-\fi
-	
-    \begin{frame}{Motivation}
-       	\begin{itemize}
-			\item In this work, we use a \textbf{planning domain definition} to represent agent behavior and environment properties;
-			\item Previous approaches involve multiple calls to a modified planner.
-			\item Our main contribution is twofold:
-				\begin{itemize}
-					\item We \textbf{obviate the need to execute a planner multiple times} for recognizing goals; and
-					\item We develop novel goal recognition heuristics that \textbf{use planning landmarks}.
-				 \end{itemize}
-			% \item We evaluate our approaches against the fastest and most accurate approach of Ramírez and Geffner ({\footnotesize Plan Recognition as Planning. IJCAI, 2009}) over \textbf{15 planning domains};
-			\item We show that our approaches are \textbf{more accurate} and \textbf{orders of magnitude faster} than Ramírez and Geffner's approach.
-		\end{itemize}
-    \end{frame}
-
-\if\masterclass1
-	\begin{frame}[c]\frametitle{Planning Heuristics}
-		Material about the planning heuristics
-	\end{frame}
+\subsection{Landmark Heuristics}
 	
     \begin{frame}{Background: Planning and Landmarks}
 		\begin{definition} [\textbf{Planning}]
@@ -858,6 +877,8 @@ morekeywords={defdomain,defproblem,:domain,:method,:operator
 % % \if\masterclass1
 % \fi
 %---------------------------------------------------------------------------------
+
+\subsection{Results}
 
     \begin{frame}{Experiments and Evaluation}
        	\begin{itemize}
