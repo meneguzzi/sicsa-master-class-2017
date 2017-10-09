@@ -9,8 +9,16 @@
 \usepackage{letltxmacro}
 \usepackage[noend]{algorithm, algpseudocode}
 
+\usepackage{amsmath}
+\usepackage{amssymb}
+
 \usepackage{mathtools}
 \newcommand\myeq{\stackrel{\mathclap{\normalfont\mbox{def}}}{=}}
+
+\newcommand{\idest}{{\it i.e.}}
+\newcommand{\exemp}{{\it e.g.}}
+\newcommand{\etc}{{\it etc.}}
+\newcommand{\etal}{{\it et al.}}
 
 \lstdefinelanguage
 {PDDL}[]{LISP}
@@ -361,7 +369,7 @@ morekeywords={defdomain,defproblem,:domain,:method,:operator
 	
 \section{Goal Recognition as reasoning over Heuristics}
 
-\section{Motivation and Background}
+\subsection{Motivation and Background}
 \if\masterclass1
 	% \begin{frame}[c]\frametitle{Goal Recognition}
 % 		Background on other PRAP approaches:
@@ -649,7 +657,7 @@ morekeywords={defdomain,defproblem,:domain,:method,:operator
 		
 	\end{frame}
 
-\subsection{Landmark Heuristics}
+% \subsection{Landmark Heuristics}
 	
     \begin{frame}{Background: Planning and Landmarks}
 		\begin{definition} [\textbf{Planning}]
@@ -804,24 +812,33 @@ morekeywords={defdomain,defproblem,:domain,:method,:operator
 		\end{itemize}
     \end{frame}
 
+\newcommand{\achieved}[1]{{\color{red}#1}}
+
     \begin{frame}{Example (2 of 4)}
 		\textbf{Achieved Landmarks in Observations:}
        	\begin{itemize}
        		\item \texttt{(and (ontable D) (clear A) (on A D)), 5 out of 8}:
-				\begin{itemize}
-					\item {\scriptsize \texttt{[(clear A)]}, \texttt{[(clear A) (ontable A) (handempty)]},
-					\\ \texttt{[(on C A) (clear C) (handempty)]}, \texttt{[(holding D)]},
-					\\ \texttt{[(clear D) (on D B) (handempty)]}}
+				\begin{itemize}\scriptsize
+					% \item {\scriptsize \texttt{[(clear A)]}, \texttt{[(clear A) (ontable A) (handempty)]},
+% 					\\ \texttt{[(on C A) (clear C) (handempty)]}, \texttt{[(holding D)]},
+% 					\\ \texttt{[(clear D) (on D B) (handempty)]}}
+					\item \texttt{(clear a) $\rightarrow$ \achieved{[(on c a), (clear c), (handempty)]}, \achieved{[(clear a)]}}, 
+					\item \texttt{(on a d) $\rightarrow$ \achieved{[(on c a), (clear c), (handempty)]}, \break \achieved{[(clear a), (ontable a), (handempty)]}, \break [(holding a), (clear d)], [(on a d)]}, 
+					\item \texttt{(ontable d) $\rightarrow$ \achieved{[(clear d), (on d b), (handempty)]}, \achieved{[(holding d)]}, [(ontable d)]}
 				\end{itemize}
+				
 			\item \texttt{(and (ontable D) (clear B) (on B D)), 4 out of 7}:
 				\begin{itemize}
 					\item {\scriptsize \texttt{[(clear B)]}, \texttt{[(ontable B) (handempty)]},
 					\\ \texttt{[(on D B) (clear D) (handempty)]}, \texttt{[(holding D)]}}
+					\item [clear b -> [[clear d, on d b, handempty], [clear b]], on b d -> [[ontable b, handempty], [clear d, holding b], [on b d]], ontable d -> [[clear d, on d b, handempty], [holding d], [ontable d]]]
 				\end{itemize}
+			
 			\item \texttt{(and (ontable D) (clear C) (on C D)), 5 out of 7}:
 				\begin{itemize}
 					\item {\scriptsize \texttt{[(clear C)]}, \texttt{[(clear C) (on C A) (handempty)]}, \texttt{[(clear D) (holding C)]}
 					\\ \texttt{[(clear D) (on D B) (handempty)]}, \texttt{[(holding D)]}}
+					\item [on c d -> [[on c a, clear c, handempty], [holding c, clear d], [on c d]], ontable d -> [[clear d, on d b, handempty], [holding d], [ontable d]], clear c -> [[clear c]]]
 				\end{itemize}
 		\end{itemize}
     \end{frame}
@@ -1458,20 +1475,259 @@ morekeywords={defdomain,defproblem,:domain,:method,:operator
 \if\masterclass1
 \section{Goal Recognition in Incomplete Domains}
 
+\subsection{Motivation and Background}
+
 \begin{frame}[c]\frametitle{Motivation}
-	\todo{This goes into the masterclass}
+	\begin{itemize}
+		\item So far, all goal recognition techniques assume that:
+		\begin{itemize}
+			\item domain knowledge is available;
+			\item a domain engineer can build a \textbf{complete} and \textbf{correct} model of such domain knowledge 
+			\item observations from sensor data agree with the model
+		\end{itemize}
+		\item However, most real world domains have two sources uncertainty:
+		\begin{itemize}
+			\item ambiguity in how actions performed by agents are realized; and
+			\item ambiguity from how imperfect sensor data reports features of the world.
+		\end{itemize}
+		\item We aim to overcome both limitations by accepting \textbf{incomplete} domains
+	\end{itemize}
 \end{frame}
 
-\begin{frame}[c]\frametitle{Formalization}
+\begin{frame}[c]\frametitle{Overview}
+	\begin{itemize}
+		\item In this work, we develop a goal recognition approach that copes with \textbf{incomplete} planning \textbf{domain models}
+		\item Our main contributions are:
+		\begin{itemize}
+			\item a new goal recognition formalization in incomplete domains
+			\item the notion of \emph{potential landmarks} to deal with such incompleteness
+			\item \emph{on-the-fly} landmark extraction techniques to deal with \emph{overlooked landmarks}
+			\item an \textbf{efficient} goal recognition technique for incomplete domains
+		\end{itemize}
+		\item We evaluate the techniques empirically in an extensive new dataset that:
+		\begin{itemize}
+			\item includes hundreds of non-trivial problems
+			\item includes various levels of domain model incompleteness
+		\end{itemize}
+	\end{itemize}
+\end{frame}
+
+\newcommand{\incp}[1]{\widetilde{\mathcal{#1}}}
+\newcommand{\inc}[1]{\widetilde{#1}}
+\newcommand{\pred}[1]{\texttt{\selectfont{#1}}}
+\renewcommand{\lbrace}{[}
+\renewcommand{\rbrace}{]}
+
+\begin{frame}[c]\frametitle{Incomplete Planning Domain}
+\begin{definition}[Incomplete Planning Domain]\label{def:planningIncompleteDomains}
+An incomplete domain models is a tuple $\widetilde{\mathcal{D}} = \langle \mathcal{R}, \widetilde{\mathcal{O}} \rangle$, where:
+\begin{itemize}
+	\item $\mathcal{R}$ is the logic language
+	\item $\widetilde{\mathcal{O}}$ is a set of incomplete operators $\inc{op} = \langle \mathit{pre}(\inc{op}), \widetilde{\mathit{pre}}(\inc{op}), \mathit{eff}^{+}(\inc{op}), \mathit{eff}^{-}(\inc{op}), \widetilde{\mathit{eff}}^{+}(\inc{op}), \widetilde{\mathit{eff}}^{-}(\inc{op}) \rangle$, where:
+	\begin{itemize}
+		\item $\mathit{pre}(\inc{op})$ and $\mathit{eff}(\inc{op})$ have the same semantics as in the STRIPS domain models;
+		\item \textit{possible} preconditions $\widetilde{\mathit{pre}}(\inc{op}) \subseteq \mathcal{R}$; and
+		\item \textit{possible} add and delete effects $\widetilde{\mathit{eff}}^{+}(\inc{op}) \subseteq \mathcal{R}$ and $\widetilde{\mathit{eff}}^{-}(\inc{op}) \subseteq \mathcal{R}$.
+	\end{itemize}
+\end{itemize}
+\end{definition}
+\begin{itemize}
+	\item $\widetilde{\mathcal{D}}$ has a \textit{completion set} $\langle\langle \widetilde{\mathcal{D}} \rangle\rangle$ comprising all derivable domain models.
+	\item $2^{\sum_{\inc{op} \in \widetilde{\mathcal{O}}}(|\widetilde{\mathit{pre}}(\inc{op})| + |\widetilde{\mathit{eff}}^{+}(\inc{op})| + |\widetilde{\mathit{eff}}^{-}(\inc{op})|)}$  such models
+	\item single ground-truth model $\mathcal{D}^{*}$ that drives observed states. 
+\end{itemize}
+	% An incomplete planning problem derived from an incomplete domain $\incp{D}$ and a set of typed objects $Z$ is defined as $\incp{P} = \langle \mathcal{F}, \incp{\mathcal{A}}, \mathcal{I}, G \rangle$, where: $\mathcal{F}$ is the set of facts (instantiated predicates from $Z$), $\incp{\mathcal{A}}$ is the set of incomplete instantiated actions from $\inc{\mathcal{O}}$ with objects from $Z$, $\mathcal{I} \subseteq \mathcal{F}$ is the initial state, and $G \subseteq \mathcal{F}$ is the goal state.
+\end{frame}
+
+\begin{frame}[c]\frametitle{Incomplete domain example}
+\begin{itemize}
+	\item $\mathcal{F} = \lbrace p,q,r,g \rbrace$;
+	\item $\incp{\mathcal{A}} = \lbrace \inc{a},\inc{b},\inc{c} \rbrace$, where:
+	\begin{itemize}
+		\item $\mathit{pre}(\inc{a}) = \lbrace p,q \rbrace, \widetilde{\mathit{pre}}(\inc{a}) = \lbrace r \rbrace, \widetilde{\mathit{eff}}^{+}(\inc{a}) = \lbrace r \rbrace, \widetilde{\mathit{eff}}^{-}(\inc{a}) = \lbrace p \rbrace$
+		\item $\mathit{pre}(\inc{b}) = \lbrace p \rbrace, \mathit{eff}^{+}(\inc{b}) = \lbrace r \rbrace, \mathit{eff}^{-}(\inc{b}) = \lbrace p \rbrace, \widetilde{\mathit{eff}}^{-}(\inc{b}) = \lbrace q \rbrace$
+		\item $\mathit{pre}(\inc{c}) = \lbrace r \rbrace, \widetilde{\mathit{pre}}(\inc{c}) = \lbrace q \rbrace, \mathit{eff}^{+}(\inc{c}) = \lbrace g \rbrace$
+	\end{itemize}
+	\item $\mathcal{I} = \lbrace p,q \rbrace$; and
+	\item $G = \lbrace g \rbrace$.
+\end{itemize}
+
+Solution:
+\begin{itemize}
+	\item Here, $[\inc{a},\inc{b},\inc{c}]$ is a valid plan that achieves the goal stated $\lbrace g \rbrace$ from the initial state $\lbrace p,q \rbrace$.
+	\item corresponds to  \textit{optimistic} state sequence:
+	$s_{0} =  \lbrace p,q \rbrace, s_{1} = \lbrace p,q,r \rbrace, s_{2} = \lbrace q,r \rbrace, s_{3} = \lbrace q,r,g \rbrace$.
+	\item This example has $2^{5}$ completion (2 possible preconditions and 3 possible effects).
+\end{itemize}
+\end{frame}
+
+\begin{frame}[c]\frametitle{Solving Problems in Incomplete Domains}
+	\todo{Get material from Rao}
+\end{frame}
+
+\begin{frame}[c]\frametitle{Goal Recognition in Incomplete Domain}
+	\begin{definition}[\textbf{Goal Recognition Problem}]\label{def:GoalRecognitionIncompleteDomains}
+	A goal recognition problem with an incomplete domain model is a quadruple $\incp{T} = \langle \incp{D}, Z, \mathcal{I}, \mathcal{G}, O \rangle$,
+	where:
+	\begin{itemize}
+		\item $\incp{D} = \langle \mathcal{R}, \widetilde{\mathcal{O}} \rangle$ is an incomplete domain model;
+		\item $Z$ is a set of typed objects in the environment, $\mathcal{F}$ is a set instantiated facts from $Z$, and $\incp{\mathcal{A}}$ is a set of instantiated incomplete actions from $\inc{\mathcal{O}}$ with objects from $Z$;
+		\item $\mathcal{I} \in \mathcal{F}$ an initial state;
+		\item $\mathcal{G}$ is a set of possible goals, including a hidden goal $G$; and
+		\item $O = \langle o_1, o_2, ..., o_n\rangle$ is an observation sequence.
+	\end{itemize}
+	\end{definition}
+	
+	Each observation $o_i \in \incp{\mathcal{A}}$. $O$ corresponds to the sequence of actions (\idest, a plan) that achieves the correct hidden goal $G$ in a complete domain in $\langle\langle \widetilde{\mathcal{D}} \rangle\rangle$.
+\end{frame}
+
+
+
+% \begin{frame}[c]\frametitle{Problem Example}
+%
+% \end{frame}
+
+
+\subsection{Landmarks in Incomplete Domains}
+
+\begin{frame}[c]\frametitle{Optimistic RPG and Landmarks}
+	\begin{center}
+		\includegraphics[width=.55\textwidth]{fig/ORPG-Example.pdf}
+	\end{center}
+	\begin{itemize}
+		\item Previous approaches to landmark-based plan recognition extract landmarks using a \emph{Relaxed Planning Graph} (RPG)
+		\item In order to cope with uncertainty, we build an \emph{optimistic} RPG
+		\begin{itemize}
+			\item ignores all \emph{possible} preconditions and delete effects \\ (definite and possible)
+			\item includes all \emph{possible add} effects to the graph
+		\end{itemize}
+		\item Extracted landmarks are now either \emph{definite} of \emph{possible}
+	\end{itemize}
+\end{frame}
+
+\begin{frame}[c]\frametitle{Definite and Possible Landmarks}
+	\begin{center}
+		\vspace{-2em}
+		\includegraphics[width=.55\textwidth]{fig/ORPG-Example.pdf}
+	\end{center}
+	\vspace{-1.5em}
+	\begin{definition}[\textbf{Definite Landmark}]\label{def:DefiniteLandmark}
+	A \textit{definite} landmark $L_{Definite}$ is a fact (landmark) extracted from a known add effect ($\mathit{eff}^{+}(a)$) of an achiever $a$ (action) in the ORPG.
+	\end{definition}
+	\begin{definition}[\textbf{Possible Landmark}]\label{def:PossibleLandmark}
+	A \textit{possible} landmark $L_{Possible}$ is a fact (landmark) extracted from a possible add effect ($\widetilde{\mathit{eff}}^{+}(a)$) of an achiever $a$ (action) in the ORPG.
+	\end{definition}
 	
 \end{frame}
 
-\begin{frame}[c]\frametitle{Problem Example}
-	
+\newcommand{\set}[1]{\{#1\}}
+
+\begin{frame}[c]\frametitle{Definite and Possible Landmarks}
+	\begin{center}
+		\vspace{-2em}
+		\includegraphics[width=.55\textwidth]{fig/ORPG-Example.pdf}
+	\end{center}
+	\vspace{-1.5em}
+	\begin{itemize}
+		\item Landmarks: $\set{p,q,r,g}$
+		\begin{itemize}
+			\item Definite Landmarks: $\set{r,g}$
+			\item Possible Landmarks: $\set{p,q}$
+		\end{itemize}
+	\end{itemize}
+\end{frame}
+
+\subsection{Recognizing Goals in Incomplete Domains}
+
+\begin{frame}[c]\frametitle{Computing Landmarks on the Fly}
+\begin{itemize}
+	\item Most \emph{efficient} landmark extraction algorithms (e.g. based on Relaxed Planning Graphs) are \emph{incomplete}\\
+	Since extracting all landmarks is as difficult as planning itself
+	\item Given the observations, we can focus landmark extraction to identify \emph{overlooked} landmarks 
+	\begin{itemize}
+		\item Rebuild the ORPG without an observation
+		\item Check for satisfiability
+	\end{itemize}
+\end{itemize}
+\end{frame}
+
+\begin{frame}[c]\frametitle{Heuristic for Incomplete Domains}
+	\begin{itemize}
+		\item Combining these three types of landmarks, we define the $h_{\widetilde{GR}}(G)$ heuristic
+		\begin{itemize}
+			\item \textit{definite}  landmarks: $\mathcal{AL}_{G}$, $\mathcal{L}_{G}$;
+			\item \textit{possible}  landmarks: $\mathcal{\widetilde{AL}}_{G}$, $\mathcal{\widetilde{L}}_{G}$; and
+			\item \textit{overlooked} landmarks $\mathcal{ANL}_{G}$, $\mathcal{NL}_{G}$
+		\end{itemize}
+		\item $h_{\widetilde{GR}}(G)$ computes the ratio of achieved landmarks over computed ones
+	\end{itemize}
+$$h_{\widetilde{GR}}(G) = \left(\frac{\mathcal{AL}_{G} + \mathcal{\widetilde{AL}}_{G} + \mathcal{ANL}_{G}}{\mathcal{L}_{G} + \mathcal{\widetilde{L}}_{G} + \mathcal{NL}_{G}}\right)$$	
+\end{frame}
+
+\begin{frame}[c]\frametitle{Goal Recognition in Incomplete Domains}
+	\todo{Shrink this}
+	    % \caption{{\footnotesize Recognize Goals in Incomplete Domain Models.}}
+	    % \textbf{Input:} $\incp{T} = \langle \incp{D}, Z, \mathcal{I}, \mathcal{G}, O \rangle$, \textit{in which} $\incp{D}$ \textit{is an incomplete domain model}, $Z$ \textit{is a set of typed objects}, $\mathcal{I}$ \textit{is the initial state}, $\mathcal{G}$ \textit{is the set of candidate goals}, \textit{and} $O$ \textit{represents observations with incomplete action sequences}.
+% 	    \\\textbf{Output:} \textit{Recognized goal(s).}
+	    \label{alg:RecognizeIncompleteDomains}
+	    \begin{algorithmic}[1]
+			{\footnotesize
+	        \Function{recognize}{$\incp{D}, Z, \mathcal{I}, \mathcal{G}, O$}
+			\State $\mathcal{H}_{\mathcal{G}} \gets \langle \rangle$ \Comment{{\scriptsize \textit{Map goals to heuristic estimated values}.}}
+	        \For{\textbf{each} goal $G$ in $\mathcal{G}$}
+				\State $\mathcal{NL}_{G} \gets \langle \rangle$ \Comment{{\scriptsize \textit{Set of overlooked landmarks for G}.}}
+				\State $\mathcal{L}_{G}, \mathcal{\widetilde{L}}_{G} \gets \textsc{extractLandmarks}(\incp{D}, Z, \mathcal{I}, G$) \Comment{{\scriptsize \textit{Extracted definite and possible landmarks for G from $\mathcal{I}$}.}}\label{alg:RecognizeIncompleteDomains:ExtractLandmarks}
+				\State $\mathcal{AL}_{G}, \mathcal{\widetilde{AL}}_{G}, \mathcal{ANL}_{G} \gets \langle \rangle$ \Comment{{\scriptsize \textit{Achieved landmarks}.}}
+				\For{\textbf{each} observed action $o$ in $O$}
+					\State $OF_{o} \gets$ all facts in $\mathit{pre}(o) \cup \mathit{eff}^{+}(o) \cup \widetilde{\mathit{eff}}^{+}(o)$ \Comment{{\scriptsize \textit{Observed facts in the incomplete model of action o}.}}\label{alg:RecognizeIncompleteDomains:UpdateState}
+					\State $\mathcal{AL}_{G} \gets $ all landmarks $l$ in $\mathcal{L}_{G}$ s.t $l \in OF_{o}$ \label{alg:RecognizeIncompleteDomains:AchievedDefiniteLandmarks}
+					\State $\mathcal{\widetilde{AL}}_{G} \gets $ all landmarks $\inc{l}$ in $\mathcal{AL}_{G}$ s.t $\inc{l} \in OF_{o}$ \label{alg:RecognizeIncompleteDomains:AchievedPossibleLandmarks}
+					\For{\textbf{each} fact $f$ in $OF_{o}$ s.t $f \notin (\mathcal{L}_{G} \cup \mathcal{\widetilde{L}}_{G})$}
+						\If{\textsc{isLandmark($f, \mathcal{I}, G$)}} \label{alg:RecognizeIncompleteDomains:OverlookedLandmarks}
+							\State $\mathcal{NL}_{G} \gets \mathcal{NL}_{G} \cup f$ \label{alg:RecognizeIncompleteDomains:OverlookedLandmarksStore}
+							\State $\mathcal{ANL}_{G} \gets \mathcal{ANL}_{G} \cup f$ \label{alg:RecognizeIncompleteDomains:AchievedOverlookedLandmarks}
+						\EndIf
+					\EndFor
+				\EndFor
+				\State $\mathcal{H}_{\mathcal{G}} := \mathcal{H}_{\mathcal{G}} \cup \langle G,\left(\frac{\mathcal{AL}_{G} + \mathcal{\widetilde{AL}}_{G} + \mathcal{ANL}_{G}}{\mathcal{L}_{G} + \mathcal{\widetilde{L}}_{G} + \mathcal{NL}_{G}}\right)\rangle$ \Comment{{\scriptsize \textit{Use $h_{\widetilde{GR}}$ heuristic for calculating the estimated value for G}.}} \label{alg:RecognizeIncompleteDomains:Heuristic}
+			\EndFor
+			\State \textbf{return} {all $G$ s.t $\langle G, v \rangle \in \mathcal{H}_{\mathcal{G}}$ and \newline \hspace*{\algorithmicindent}{\phantom{return }} $v \geq (\max_{v_i}{ \langle G',v_i \rangle \in \mathcal{H}_{\mathcal{G}}})$} \label{alg:RecognizeIncompleteDomains:Return}
+	        \EndFunction
+			}
+	    \end{algorithmic}
 \end{frame}
 
 \begin{frame}[c]\frametitle{Algorithm Example}
-	
+	\todo{Fill this in with an example}
+\end{frame}
+
+
+\subsection{Results}
+
+\begin{frame}[c]\frametitle{Results Low Incompleteness}
+	\begin{columns}
+		\begin{column}{0.45\textwidth}
+			\centering
+		\includegraphics[width=.9\linewidth]{roc_space_incomplete/rocspace-domain_incompleteness-20.pdf}
+		\end{column}
+		\begin{column}{0.45\textwidth}
+			\centering
+		\includegraphics[width=.9\linewidth]{roc_space_incomplete/rocspace-domain_incompleteness-40.pdf}
+		\end{column}
+	\end{columns}
+\end{frame}
+
+\begin{frame}[c]\frametitle{Results High Incompleteness}
+	\begin{columns}
+		\begin{column}{0.45\textwidth}
+			\centering
+		\includegraphics[width=.9\linewidth]{roc_space_incomplete/rocspace-domain_incompleteness-60.pdf}
+		\end{column}
+		\begin{column}{0.45\textwidth}
+			\centering
+		\includegraphics[width=.9\linewidth]{roc_space_incomplete/rocspace-domain_incompleteness-80.pdf}
+		\end{column}
+	\end{columns}
 \end{frame}
 
 \fi
