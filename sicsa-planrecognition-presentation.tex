@@ -394,7 +394,7 @@ morekeywords={defdomain,defproblem,:domain,:method,:operator
 		\end{itemize}
 	\end{frame}
 	
-	\begin{frame}[c]\frametitle{Previous Work: Ramirez and Geffner}
+	\begin{frame}[c]\frametitle{Previous Work: Ramirez and Geffner (2009 and 2010)}
 		\begin{itemize}
 			\item First approaches to goal recognition: Plan Recognition as Planning (PRAP)
 			\item Probabilistic model aims to compute $P(G \mid O)$
@@ -408,17 +408,34 @@ morekeywords={defdomain,defproblem,:domain,:method,:operator
 			\item Some conclusions challenged for path planning domains\\ (Masters and Sardina 2017)
 		\end{itemize}
 	\end{frame}
-	\begin{frame}[c]\frametitle{Previous Work: E-Martín et al.}
+	\begin{frame}[c]\frametitle{Previous Work: E-Martín et al. (2015)}
 		\begin{itemize}
-			\item Improvement over Ramirez's approach:
+			\item Improvement over Ramirez and Geffner's approach:
 			\begin{itemize}
+				\item Relaxes assumption that $c(G \mid O) < c(G,\bar{O})$
 				\item Based on pre-computation of cost estimates using a planning graph
-				\item Often orders of magnitude faster than 
+				\item Often orders of magnitude faster than Ramirez
 			\end{itemize}
+			\item Performance degrades substantially with low observability
+			\item Does not cope with noisy observations
 		\end{itemize}
 	\end{frame}
 	\begin{frame}[c]\frametitle{Previous Work: Sohrabi et al.}
-		
+		\begin{itemize}
+			\item Formalizes PRAP with explicit assumptions and notions of 
+			\begin{itemize}
+				\item noisy observations
+				\item incomplete observations
+				\item action costs
+			\end{itemize}
+			\item Solves the goal recognition problem using a combination of:
+			\begin{itemize}
+				\item transformation of the recognition problem into a new $P'$ planning problem
+				\item approximation of $P(G \mid O)$ by generating ``diverse plans'' for $P'$
+			\end{itemize}
+			\item Very accurate recognition for some domains
+			\item No runtime efficiency evaluation (likely to be slow)
+		\end{itemize}
 	\end{frame}
 \fi
 	
