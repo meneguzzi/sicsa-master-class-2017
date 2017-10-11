@@ -229,13 +229,35 @@ morekeywords={defdomain,defproblem,:domain,:method,:operator
 		\end{itemize}
 	\end{frame}
 
-	\begin{frame}[t]\frametitle{Roboschool Formalization in PDDL}
+	% \begin{frame}[t]\frametitle{Roboschool Formalization in PDDL}
+% 		\begin{columns}
+% 			\begin{column}[t]{0.6\textwidth}
+% 			\lstinputlisting[basicstyle=\fontsize{5}{5.5}\selectfont,language=PDDL]{examples/roboschool.pddl.txt}
+% 			\end{column}
+% 			\begin{column}[t]{0.4\textwidth}
+% 			\lstinputlisting[basicstyle=\fontsize{3.5}{3.8}\selectfont,language=PDDL]{examples/pb2_full.pddl.txt}
+% 			\end{column}
+% 		\end{columns}
+% 	\end{frame}
+
+	\begin{frame}[t]\frametitle{Roboschool Domain in PDDL}
 		\begin{columns}
-			\begin{column}[t]{0.6\textwidth}
-			\lstinputlisting[basicstyle=\fontsize{5}{5.5}\selectfont,language=PDDL]{examples/roboschool.pddl.txt}
+			\begin{column}[t]{0.5\textwidth}
+			\lstinputlisting[basicstyle=\fontsize{6}{6.5}\selectfont,language=PDDL,linerange=1-26]{examples/roboschool.pddl.txt}
 			\end{column}
-			\begin{column}[t]{0.4\textwidth}
-			\lstinputlisting[basicstyle=\fontsize{3.5}{3.8}\selectfont,language=PDDL]{examples/pb2_full.pddl.txt}
+			\begin{column}[t]{0.5\textwidth}
+			\lstinputlisting[basicstyle=\fontsize{6}{6.5}\selectfont,language=PDDL,linerange=27-50]{examples/roboschool.pddl.txt}
+			\end{column}
+		\end{columns}
+	\end{frame}
+	
+	\begin{frame}[t]\frametitle{Roboschool Problem in PDDL}
+		\begin{columns}
+			\begin{column}[t]{0.5\textwidth}
+			\lstinputlisting[basicstyle=\fontsize{5}{5.5}\selectfont,language=PDDL,linerange=1-24]{examples/pb2_full.pddl.txt}
+			\end{column}
+			\begin{column}[t]{0.5\textwidth}
+			\lstinputlisting[basicstyle=\fontsize{5}{5.5}\selectfont,language=PDDL,linerange=25-50]{examples/pb2_full.pddl.txt}
 			\end{column}
 		\end{columns}
 	\end{frame}
@@ -248,7 +270,7 @@ morekeywords={defdomain,defproblem,:domain,:method,:operator
 				\item $\mathcal{I} \subseteq \Sigma$ and $G \subseteq \Sigma$ represent the \textbf{planning problem}, in which $\mathcal{I} \subseteq \Sigma$ is the \textbf{initial state}, and $G \subseteq \Sigma$ is the \textbf{goal state}.
 			\end{itemize}
 		\end{definition}
-		\todo{Complete this with the notion of a plan}
+		A solution to a planning instance is a plan $\pi = \langle a_1, \dots a_n\rangle$ that modifies the initial state $\mathcal{I}$ into one where the goal state $\mathcal{G}$ holds by the successive application of actions $a_i \in \pi$
 	\end{frame}
 	
 	\begin{frame}[c]\frametitle{Roboschool PDDL Plan}
@@ -323,9 +345,9 @@ morekeywords={defdomain,defproblem,:domain,:method,:operator
 		\end{itemize}
 	\end{frame}
 	
-	\begin{frame}[c]\frametitle{Roboschool}
-		{\color{red} Add Roboschool problem for master class}
-	\end{frame}
+	% \begin{frame}[c]\frametitle{Roboschool}
+	% 	{\color{red} Add Roboschool problem for master class}
+	% \end{frame}
 	
 	\begin{frame}[c]\frametitle{Observations}
 		\begin{itemize}
@@ -687,8 +709,13 @@ morekeywords={defdomain,defproblem,:domain,:method,:operator
 		\end{algorithmic}
 	\end{frame}
 	
-	\begin{frame}[c]\frametitle{Blocks World Problem}
-		
+	\begin{frame}[c]\frametitle{Blocks World: RPG}
+		\begin{center}
+			\includegraphics[width=\textwidth]{fig/blocksworld-landmarks-rpg.pdf}
+		\end{center}
+		\vspace{-2cm}
+		Blocks World Problem\\
+		\includegraphics[width=.5\textwidth]{fig/blocksworld-problem.pdf}
 	\end{frame}
 
 % \subsection{Landmark Heuristics}
@@ -704,17 +731,32 @@ morekeywords={defdomain,defproblem,:domain,:method,:operator
 		\begin{definition}[\textbf{Landmarks}]
 			Given a planning instance $\Pi = \langle \Xi, \mathcal{I}, G\rangle$, a \textbf{fact} (or \textbf{action}) $L$ is a landmark in $\Pi$ iff $L$ 	must be \textbf{satisfied} (or \textbf{executed}) at some point along all valid plans that achieve $G$ from $\mathcal{I}$.
 		\end{definition}
-		\begin{itemize}
-			\item To extract landmarks and their ordering, we use an algorithm developed by Hoffman \emph{et al.} {\footnotesize (Ordered Landmarks in Planning. JAIR, 2004)}.
-		\end{itemize}
+		% \begin{itemize}
+% 			\item To extract landmarks and their ordering, we use an algorithm developed by Hoffman \emph{et al.} {\footnotesize (Ordered Landmarks in Planning. JAIR, 2004)}.
+% 		\end{itemize}
     \end{frame}	
+	
+	\begin{frame}[c]\frametitle{Computing Landmarks}
+		\begin{itemize}
+			\item Deciding whether a fact is a landmark is PSPACE-complete\\
+				Involves deciding whether a plan exists with out actions that achieve it
+			\item Multiple types of landmarks/orderings
+			\item Multiple ways of computing landmarks:
+			\begin{itemize}
+				\item Complete set of landmarks (very expensive)
+				\item Various methods to compute incomplete set of landmarks \\(e.g. delete relaxation, backchaining on RPG)
+				\item Disjunctive landmarks
+			\end{itemize}
+			\item In our work we use an algorithm from Hoffman \emph{et al.} (2004) to compute an incomplete set of landmarks with a partial order relation
+		\end{itemize}
+	\end{frame}
 \fi
 
 %---------------------------------------------------------------------------------
 
     \begin{frame}{Computing Achieved Landmarks}
 		\if\masterclass1
-		\todo{Change this example to the one from Ramirez}
+		% \todo{Change this example to the one from Ramirez}
 		\fi
 		\begin{center}
 		    \includegraphics[width=.4\textwidth]{example.pdf} 
@@ -1224,11 +1266,11 @@ morekeywords={defdomain,defproblem,:domain,:method,:operator
 		\end{columns}
 	\end{frame}
 	
-	\if\masterclass1
-	\begin{frame}[c]\frametitle{Online Recognition with Landmarks}
-		\todo{For masterclass, put algorithm with example}
-	\end{frame}
-	\fi
+	% \if\masterclass1
+% 	\begin{frame}[c]\frametitle{Online Recognition with Landmarks}
+% 		\todo{For masterclass, put algorithm with example}
+% 	\end{frame}
+% 	\fi
 	
 	\begin{frame}[c]\frametitle{Goal Mirroring with Landmarks}
 		Combines landmark reasoning with goal mirroring
@@ -1315,157 +1357,157 @@ morekeywords={defdomain,defproblem,:domain,:method,:operator
 	\end{frame}
 % \fi
 
-\if\masterclass1
-	\begin{frame}[c]\frametitle{Performance Results}
-		\todo{Redo this table for the masterclass}
-		\newcommand{\timeout}{\fontsize{4}{4}\selectfont \textit{Timeout}}
-		\tiny
-		\begin{tabular}{llll|cccccc|cccccc|cccccc|}
-		\cline{5-22}
-		                                                                                              &                                &                                &               & \multicolumn{18}{c|}{\bf Continuous Domains}                                                                                                                                      \\ \cline{5-22} 
-		                                                                                              &                                &                                &               & \multicolumn{6}{c|}{\sc Goal Mirroring}                                                            
-		& \multicolumn{6}{c|}{\sc Goal Mirroring with Landmarks}                                               
-		& \multicolumn{6}{c|}{\sc Online Recognition with Landmarks}                                                            \\ \hline
-		\multicolumn{1}{|c|}{\textit{\begin{tabular}[c]{@{}c@{}}Domain\\ (\# problems)\end{tabular}}\hspace{0.2em}}
-		& \multicolumn{1}{c}{\textit{$|G|$}} & \multicolumn{1}{c}{\textit{$|O|$}} & \multicolumn{1}{c|}{\textit{$|L|$}} 
-		& \textit{Time}     & \textit{PC} & \textit{TPR} & \textit{FPR} & \textit{RF} & \textit{CV} 
-		& \textit{Time}     & \textit{PC} & \textit{TPR} & \textit{FPR} & \textit{RF} & \textit{CV} 
-		& \textit{Time}     & \textit{PC} & \textit{TPR} & \textit{FPR} & \textit{RF} & \textit{CV} \\ \hline
-
-		\multicolumn{1}{|c|}{\begin{tabular}[c]{@{}c@{}}Cubicles\\ (220)\end{tabular}\hspace{0.2em}}
-			& \multicolumn{1}{c}{11.0}
-			& \multicolumn{1}{c}{26.5}
-			& \multicolumn{1}{c|}{11.0}
-			% Mirroring Results
-			& 104.70	& 265.0		& \textbf{100\%}		& 100\%		& 20.2\%	& 21.8\%
-
-			% Mirroring with Landmarks
-			& 85.90 	& 184.8		& 78.2\%	& 61.1\%	& \textbf{24.3\%}	& \textbf{26.2\%}
-	
-			% Landmarks
-			& \textbf{0.020}  & \textbf{0}	& 78.3\%	& \textbf{60.9\%}	& 21.7\%	&	15\% \hspace{0.3em}             \\ \hline	
-		\end{tabular}
-
-		\vspace{1mm}
-
-		\begin{tabular}{llll|cccccc|cccccc|cccccc|}
-		\cline{5-22}
-		                                                                                              &                                &                                &               & \multicolumn{18}{c|}{\bf Discrete Domains}                                                                                                                                      \\ \cline{5-22} 
-		                                                                                              &                                &                                &               & \multicolumn{6}{c|}{\sc Goal Mirroring}                                                            
-		& \multicolumn{6}{c|}{\sc Goal Mirroring with Landmarks}                                               
-		& \multicolumn{6}{c|}{\sc Online Recognition with Landmarks}                                                            \\ \hline
-		\multicolumn{1}{|c|}{\textit{\begin{tabular}[c]{@{}c@{}}Domain\\ (\# problems)\end{tabular}}} 
-		& \multicolumn{1}{c}{\textit{$|G|$}} & \multicolumn{1}{c}{\textit{$|O|$}} & \multicolumn{1}{c|}{\textit{$|L|$}} 
-		& \textit{Time}     & \textit{PC} & \textit{TPR} & \textit{FPR} & \textit{RF} & \textit{CV} 
-		& \textit{Time}     & \textit{PC} & \textit{TPR} & \textit{FPR} & \textit{RF} & \textit{CV} 
-		& \textit{Time}     & \textit{PC} & \textit{TPR} & \textit{FPR} & \textit{RF} & \textit{CV} \\ \hline
-	
-		\multicolumn{1}{|c|}{\begin{tabular}[c]{@{}c@{}}Campus\\ (15)\end{tabular}}
-			& \multicolumn{1}{c}{2.0}
-			& \multicolumn{1}{c}{5.4}
-			& \multicolumn{1}{c|}{8.6}
-			% Mirroring Results
-			& 0.441		& 12.8	& 60.0\%	& 21.3\% 	& 57.3\% 	& 41.3\%
-
-			% Mirroring with Landmarks
-			& 0.212		& 7.7	& \textbf{96.4\%}	& \textbf{1.7\%}	& \textbf{96.4\%} 	& \textbf{96.4\%}
-	
-			% Landmarks
-			& \textbf{0.065} & \textbf{0}	& 92.8\%	& 3.5\%		& 92.8\% 	& 92.8\%              \\ \hline
-
-		\multicolumn{1}{|c|}{\begin{tabular}[c]{@{}c@{}}IPC-Grid\\ (61)\end{tabular}}
-			& \multicolumn{1}{c}{8.3}
-			& \multicolumn{1}{c}{21.8}
-			& \multicolumn{1}{c|}{10.2}
-			% Mirroring Results
-			& 10.36		& 209.1		& \textbf{87.2\%}	& 19.4\%	& 36.6\% 	& 35.6\%
-
-			% Mirroring with Landmarks
-			& 3.29		& 71.2		& 55.6\%	& \textbf{10.5\%} 	& \textbf{45.8\%}	& \textbf{41.5\%}
-	
-			% Landmarks
-			& \textbf{0.335}	& \textbf{0}	& 59.4\%	& 21.8\% 	& 32.6\%	& 31.1\%              \\ \hline
-	
-		\multicolumn{1}{|c|}{\begin{tabular}[c]{@{}c@{}}Ferry\\ (28)\end{tabular}}
-			& \multicolumn{1}{c}{7.5}
-			& \multicolumn{1}{c}{24.2}
-			& \multicolumn{1}{c|}{28.5}
-			% Mirroring Results
-			& 55.24	& 179.5		& 83.1\%	& 10.2\% 	& 59.2\%	& 57.2\%
-
-			% Mirroring with Landmarks
-			& 7.98	& 35.4		& \textbf{83.3\%}	& \textbf{3.1\%} 	& \textbf{82.4\%}	& \textbf{82.1\%}
-	
-			% Landmarks
-			& \textbf{0.101}	& \textbf{0}		& 82.4\%	& 5.4\%  & 72.5\%	& 71.9\%              \\ \hline
-
-		\multicolumn{1}{|c|}{\begin{tabular}[c]{@{}c@{}}Intrusion\\ (45)\end{tabular}}
-			& \multicolumn{1}{c}{16.6}
-			& \multicolumn{1}{c}{13.1}
-			& \multicolumn{1}{c|}{16.0}
-			% Mirroring Results
-			& 2.02	& 235.5		& \textbf{100\%}		& 7.2\% 	& 55.3\%	& 55.3\%
-
-			% Mirroring with Landmarks
-			& 0.257	& 34.7		& 75.5\%	& \textbf{3.6\%} 	& \textbf{67.1\%}	& \textbf{67.1\%}
-	
-			% Landmarks
-			& \textbf{0.127}	& \textbf{0}	& 87.6\%	& 3.9\% 	& 57.1\%	& 55.1\%              \\ \hline
-	
-		\multicolumn{1}{|c|}{\begin{tabular}[c]{@{}c@{}}Kitchen\\ (15)\end{tabular}}
-			& \multicolumn{1}{c}{3.0}
-			& \multicolumn{1}{c}{7.4}
-			& \multicolumn{1}{c|}{5.0}
-			% Mirroring Results
-			& 0.141	& 25.4		& 70.1\%	& 18.4\% 	& 44.6\%	& 36.1\%
-
-			% Mirroring with Landmarks
-			& 0.07	& 20.0		& 77.6\%	& \textbf{17.9\%} 	& \textbf{62.6\%}	& \textbf{58.3\%}
-	
-			% Landmarks
-			& \textbf{0.04}	& \textbf{0}	& \textbf{100\%}		& 50\% 		& 23.9\%	& 23.9\%              \\ \hline
-	
-		\multicolumn{1}{|c|}{\begin{tabular}[c]{@{}c@{}}Logistics\\ (61)\end{tabular}}
-			& \multicolumn{1}{c}{10.4}
-			& \multicolumn{1}{c}{24.4}
-			& \multicolumn{1}{c|}{16.1}
-			% Mirroring Results
-			& 53.82	& 199.3		& \textbf{95.4\%}	& 14.7\% 	& 26.9\%	& 25.8\%
-
-			% Mirroring with Landmarks
-			& 14.39	& 49.6		& 61.7\%	& \textbf{6.7\%} 	& \textbf{49.1\%}	& \textbf{48.4\%}
-	
-			% Landmarks
-			& \textbf{0.594}	& \textbf{0}	& 56.1\%	& 9.5\% 	& 40.5\%	& 40.5\%              \\ \hline
-	
-		\multicolumn{1}{|c|}{\begin{tabular}[c]{@{}c@{}}Rovers\\ (28)\end{tabular}}
-			& \multicolumn{1}{c}{6.0}
-			& \multicolumn{1}{c}{24.9}
-			& \multicolumn{1}{c|}{19.8}
-			% Mirroring Results
-			& \timeout	& -	& -	& -	& - & -
-
-			% Mirroring with Landmarks
-			& 58.87	& 31.1		& \textbf{76.8\%}	& \textbf{4.8\%} 	& \textbf{76.2\%}	& \textbf{75.1\%}
-	
-			% Landmarks
-			& \textbf{0.867}	& \textbf{0}	& 72.1\%	& 8.5\% 	& 62.1\%	& 62.1\%              \\ \hline
-	
-		\multicolumn{1}{|c|}{\begin{tabular}[c]{@{}c@{}}Satellite\\ (28)\end{tabular}}
-			& \multicolumn{1}{c}{6.4}
-			& \multicolumn{1}{c}{16.9}
-			& \multicolumn{1}{c|}{10.1}
-			% Mirroring Results
-			& 93.89	& 177.2		& \textbf{100\%}		& 33.8\% 	& 36.1\%	& 36.1\%
-
-			% Mirroring with Landmarks
-			& 5.18	& 30.6		& 81.8\%	& 9.4\% 	& \textbf{72.8\%}	& \textbf{71.9\%}
-	
-			% Landmarks
-			& \textbf{1.09}	& \textbf{0}	& 78.2\%	& \textbf{9.3\%} 	& 64.4\%	& 64.1\%              \\ \hline
-		\end{tabular}
-	\end{frame}
-\fi
+% \if\masterclass1
+% 	\begin{frame}[c]\frametitle{Performance Results}
+% 		\todo{Redo this table for the masterclass}
+% 		\newcommand{\timeout}{\fontsize{4}{4}\selectfont \textit{Timeout}}
+% 		\tiny
+% 		\begin{tabular}{llll|cccccc|cccccc|cccccc|}
+% 		\cline{5-22}
+% 		                                                                                              &                                &                                &               & \multicolumn{18}{c|}{\bf Continuous Domains}                                                                                                                                      \\ \cline{5-22}
+% 		                                                                                              &                                &                                &               & \multicolumn{6}{c|}{\sc Goal Mirroring}
+% 		& \multicolumn{6}{c|}{\sc Goal Mirroring with Landmarks}
+% 		& \multicolumn{6}{c|}{\sc Online Recognition with Landmarks}                                                            \\ \hline
+% 		\multicolumn{1}{|c|}{\textit{\begin{tabular}[c]{@{}c@{}}Domain\\ (\# problems)\end{tabular}}\hspace{0.2em}}
+% 		& \multicolumn{1}{c}{\textit{$|G|$}} & \multicolumn{1}{c}{\textit{$|O|$}} & \multicolumn{1}{c|}{\textit{$|L|$}}
+% 		& \textit{Time}     & \textit{PC} & \textit{TPR} & \textit{FPR} & \textit{RF} & \textit{CV}
+% 		& \textit{Time}     & \textit{PC} & \textit{TPR} & \textit{FPR} & \textit{RF} & \textit{CV}
+% 		& \textit{Time}     & \textit{PC} & \textit{TPR} & \textit{FPR} & \textit{RF} & \textit{CV} \\ \hline
+%
+% 		\multicolumn{1}{|c|}{\begin{tabular}[c]{@{}c@{}}Cubicles\\ (220)\end{tabular}\hspace{0.2em}}
+% 			& \multicolumn{1}{c}{11.0}
+% 			& \multicolumn{1}{c}{26.5}
+% 			& \multicolumn{1}{c|}{11.0}
+% 			% Mirroring Results
+% 			& 104.70	& 265.0		& \textbf{100\%}		& 100\%		& 20.2\%	& 21.8\%
+%
+% 			% Mirroring with Landmarks
+% 			& 85.90 	& 184.8		& 78.2\%	& 61.1\%	& \textbf{24.3\%}	& \textbf{26.2\%}
+%
+% 			% Landmarks
+% 			& \textbf{0.020}  & \textbf{0}	& 78.3\%	& \textbf{60.9\%}	& 21.7\%	&	15\% \hspace{0.3em}             \\ \hline
+% 		\end{tabular}
+%
+% 		\vspace{1mm}
+%
+% 		\begin{tabular}{llll|cccccc|cccccc|cccccc|}
+% 		\cline{5-22}
+% 		                                                                                              &                                &                                &               & \multicolumn{18}{c|}{\bf Discrete Domains}                                                                                                                                      \\ \cline{5-22}
+% 		                                                                                              &                                &                                &               & \multicolumn{6}{c|}{\sc Goal Mirroring}
+% 		& \multicolumn{6}{c|}{\sc Goal Mirroring with Landmarks}
+% 		& \multicolumn{6}{c|}{\sc Online Recognition with Landmarks}                                                            \\ \hline
+% 		\multicolumn{1}{|c|}{\textit{\begin{tabular}[c]{@{}c@{}}Domain\\ (\# problems)\end{tabular}}}
+% 		& \multicolumn{1}{c}{\textit{$|G|$}} & \multicolumn{1}{c}{\textit{$|O|$}} & \multicolumn{1}{c|}{\textit{$|L|$}}
+% 		& \textit{Time}     & \textit{PC} & \textit{TPR} & \textit{FPR} & \textit{RF} & \textit{CV}
+% 		& \textit{Time}     & \textit{PC} & \textit{TPR} & \textit{FPR} & \textit{RF} & \textit{CV}
+% 		& \textit{Time}     & \textit{PC} & \textit{TPR} & \textit{FPR} & \textit{RF} & \textit{CV} \\ \hline
+%
+% 		\multicolumn{1}{|c|}{\begin{tabular}[c]{@{}c@{}}Campus\\ (15)\end{tabular}}
+% 			& \multicolumn{1}{c}{2.0}
+% 			& \multicolumn{1}{c}{5.4}
+% 			& \multicolumn{1}{c|}{8.6}
+% 			% Mirroring Results
+% 			& 0.441		& 12.8	& 60.0\%	& 21.3\% 	& 57.3\% 	& 41.3\%
+%
+% 			% Mirroring with Landmarks
+% 			& 0.212		& 7.7	& \textbf{96.4\%}	& \textbf{1.7\%}	& \textbf{96.4\%} 	& \textbf{96.4\%}
+%
+% 			% Landmarks
+% 			& \textbf{0.065} & \textbf{0}	& 92.8\%	& 3.5\%		& 92.8\% 	& 92.8\%              \\ \hline
+%
+% 		\multicolumn{1}{|c|}{\begin{tabular}[c]{@{}c@{}}IPC-Grid\\ (61)\end{tabular}}
+% 			& \multicolumn{1}{c}{8.3}
+% 			& \multicolumn{1}{c}{21.8}
+% 			& \multicolumn{1}{c|}{10.2}
+% 			% Mirroring Results
+% 			& 10.36		& 209.1		& \textbf{87.2\%}	& 19.4\%	& 36.6\% 	& 35.6\%
+%
+% 			% Mirroring with Landmarks
+% 			& 3.29		& 71.2		& 55.6\%	& \textbf{10.5\%} 	& \textbf{45.8\%}	& \textbf{41.5\%}
+%
+% 			% Landmarks
+% 			& \textbf{0.335}	& \textbf{0}	& 59.4\%	& 21.8\% 	& 32.6\%	& 31.1\%              \\ \hline
+%
+% 		\multicolumn{1}{|c|}{\begin{tabular}[c]{@{}c@{}}Ferry\\ (28)\end{tabular}}
+% 			& \multicolumn{1}{c}{7.5}
+% 			& \multicolumn{1}{c}{24.2}
+% 			& \multicolumn{1}{c|}{28.5}
+% 			% Mirroring Results
+% 			& 55.24	& 179.5		& 83.1\%	& 10.2\% 	& 59.2\%	& 57.2\%
+%
+% 			% Mirroring with Landmarks
+% 			& 7.98	& 35.4		& \textbf{83.3\%}	& \textbf{3.1\%} 	& \textbf{82.4\%}	& \textbf{82.1\%}
+%
+% 			% Landmarks
+% 			& \textbf{0.101}	& \textbf{0}		& 82.4\%	& 5.4\%  & 72.5\%	& 71.9\%              \\ \hline
+%
+% 		\multicolumn{1}{|c|}{\begin{tabular}[c]{@{}c@{}}Intrusion\\ (45)\end{tabular}}
+% 			& \multicolumn{1}{c}{16.6}
+% 			& \multicolumn{1}{c}{13.1}
+% 			& \multicolumn{1}{c|}{16.0}
+% 			% Mirroring Results
+% 			& 2.02	& 235.5		& \textbf{100\%}		& 7.2\% 	& 55.3\%	& 55.3\%
+%
+% 			% Mirroring with Landmarks
+% 			& 0.257	& 34.7		& 75.5\%	& \textbf{3.6\%} 	& \textbf{67.1\%}	& \textbf{67.1\%}
+%
+% 			% Landmarks
+% 			& \textbf{0.127}	& \textbf{0}	& 87.6\%	& 3.9\% 	& 57.1\%	& 55.1\%              \\ \hline
+%
+% 		\multicolumn{1}{|c|}{\begin{tabular}[c]{@{}c@{}}Kitchen\\ (15)\end{tabular}}
+% 			& \multicolumn{1}{c}{3.0}
+% 			& \multicolumn{1}{c}{7.4}
+% 			& \multicolumn{1}{c|}{5.0}
+% 			% Mirroring Results
+% 			& 0.141	& 25.4		& 70.1\%	& 18.4\% 	& 44.6\%	& 36.1\%
+%
+% 			% Mirroring with Landmarks
+% 			& 0.07	& 20.0		& 77.6\%	& \textbf{17.9\%} 	& \textbf{62.6\%}	& \textbf{58.3\%}
+%
+% 			% Landmarks
+% 			& \textbf{0.04}	& \textbf{0}	& \textbf{100\%}		& 50\% 		& 23.9\%	& 23.9\%              \\ \hline
+%
+% 		\multicolumn{1}{|c|}{\begin{tabular}[c]{@{}c@{}}Logistics\\ (61)\end{tabular}}
+% 			& \multicolumn{1}{c}{10.4}
+% 			& \multicolumn{1}{c}{24.4}
+% 			& \multicolumn{1}{c|}{16.1}
+% 			% Mirroring Results
+% 			& 53.82	& 199.3		& \textbf{95.4\%}	& 14.7\% 	& 26.9\%	& 25.8\%
+%
+% 			% Mirroring with Landmarks
+% 			& 14.39	& 49.6		& 61.7\%	& \textbf{6.7\%} 	& \textbf{49.1\%}	& \textbf{48.4\%}
+%
+% 			% Landmarks
+% 			& \textbf{0.594}	& \textbf{0}	& 56.1\%	& 9.5\% 	& 40.5\%	& 40.5\%              \\ \hline
+%
+% 		\multicolumn{1}{|c|}{\begin{tabular}[c]{@{}c@{}}Rovers\\ (28)\end{tabular}}
+% 			& \multicolumn{1}{c}{6.0}
+% 			& \multicolumn{1}{c}{24.9}
+% 			& \multicolumn{1}{c|}{19.8}
+% 			% Mirroring Results
+% 			& \timeout	& -	& -	& -	& - & -
+%
+% 			% Mirroring with Landmarks
+% 			& 58.87	& 31.1		& \textbf{76.8\%}	& \textbf{4.8\%} 	& \textbf{76.2\%}	& \textbf{75.1\%}
+%
+% 			% Landmarks
+% 			& \textbf{0.867}	& \textbf{0}	& 72.1\%	& 8.5\% 	& 62.1\%	& 62.1\%              \\ \hline
+%
+% 		\multicolumn{1}{|c|}{\begin{tabular}[c]{@{}c@{}}Satellite\\ (28)\end{tabular}}
+% 			& \multicolumn{1}{c}{6.4}
+% 			& \multicolumn{1}{c}{16.9}
+% 			& \multicolumn{1}{c|}{10.1}
+% 			% Mirroring Results
+% 			& 93.89	& 177.2		& \textbf{100\%}		& 33.8\% 	& 36.1\%	& 36.1\%
+%
+% 			% Mirroring with Landmarks
+% 			& 5.18	& 30.6		& 81.8\%	& 9.4\% 	& \textbf{72.8\%}	& \textbf{71.9\%}
+%
+% 			% Landmarks
+% 			& \textbf{1.09}	& \textbf{0}	& 78.2\%	& \textbf{9.3\%} 	& 64.4\%	& 64.1\%              \\ \hline
+% 		\end{tabular}
+% 	\end{frame}
+% \fi
 	
 	\begin{frame}[c]\frametitle{Performance Results}
 		\begin{center}
@@ -1595,9 +1637,9 @@ Solution:
 \end{itemize}
 \end{frame}
 
-\begin{frame}[c]\frametitle{Solving Problems in Incomplete Domains}
-	\todo{Get material from Rao}
-\end{frame}
+% \begin{frame}[c]\frametitle{Solving Problems in Incomplete Domains}
+% 	\todo{Get material from Rao}
+% \end{frame}
 
 \begin{frame}[c]\frametitle{Goal Recognition in Incomplete Domain}
 	\begin{definition}[\textbf{Goal Recognition Problem}]\label{def:GoalRecognitionIncompleteDomains}
@@ -1699,7 +1741,7 @@ $$h_{\widetilde{GR}}(G) = \left(\frac{\mathcal{AL}_{G} + \mathcal{\widetilde{AL}
 \end{frame}
 
 \begin{frame}[c]\frametitle{Goal Recognition in Incomplete Domains}
-	\todo{Shrink this}
+	% \todo{Shrink this}
 	    % \caption{{\footnotesize Recognize Goals in Incomplete Domain Models.}}
 	    % \textbf{Input:} $\incp{T} = \langle \incp{D}, Z, \mathcal{I}, \mathcal{G}, O \rangle$, \textit{in which} $\incp{D}$ \textit{is an incomplete domain model}, $Z$ \textit{is a set of typed objects}, $\mathcal{I}$ \textit{is the initial state}, $\mathcal{G}$ \textit{is the set of candidate goals}, \textit{and} $O$ \textit{represents observations with incomplete action sequences}.
 % 	    \\\textbf{Output:} \textit{Recognized goal(s).}
@@ -1710,7 +1752,7 @@ $$h_{\widetilde{GR}}(G) = \left(\frac{\mathcal{AL}_{G} + \mathcal{\widetilde{AL}
 			\State $\mathcal{H}_{\mathcal{G}} \gets \langle \rangle$ \Comment{{\scriptsize \textit{Map goals to heuristic estimated values}.}}
 	        \For{\textbf{each} goal $G$ in $\mathcal{G}$}
 				\State $\mathcal{NL}_{G} \gets \langle \rangle$ \Comment{{\scriptsize \textit{Set of overlooked landmarks for G}.}}
-				\State $\mathcal{L}_{G}, \mathcal{\widetilde{L}}_{G} \gets \textsc{extractLandmarks}(\incp{D}, Z, \mathcal{I}, G$) \Comment{{\scriptsize \textit{Extracted definite and possible landmarks for G from $\mathcal{I}$}.}}\label{alg:RecognizeIncompleteDomains:ExtractLandmarks}
+				\State $\mathcal{L}_{G}, \mathcal{\widetilde{L}}_{G} \gets \textsc{extractLandmarks}(\incp{D}, Z, \mathcal{I}, G$) %\Comment{{\scriptsize \textit{Extracted definite and possible landmarks for G from $\mathcal{I}$}.}}\label{alg:RecognizeIncompleteDomains:ExtractLandmarks}
 				\State $\mathcal{AL}_{G}, \mathcal{\widetilde{AL}}_{G}, \mathcal{ANL}_{G} \gets \langle \rangle$ \Comment{{\scriptsize \textit{Achieved landmarks}.}}
 				\For{\textbf{each} observed action $o$ in $O$}
 					\State $OF_{o} \gets$ all facts in $\mathit{pre}(o) \cup \mathit{eff}^{+}(o) \cup \widetilde{\mathit{eff}}^{+}(o)$ \Comment{{\scriptsize \textit{Observed facts in the incomplete model of action o}.}}\label{alg:RecognizeIncompleteDomains:UpdateState}
@@ -1723,7 +1765,7 @@ $$h_{\widetilde{GR}}(G) = \left(\frac{\mathcal{AL}_{G} + \mathcal{\widetilde{AL}
 						\EndIf
 					\EndFor
 				\EndFor
-				\State $\mathcal{H}_{\mathcal{G}} := \mathcal{H}_{\mathcal{G}} \cup \langle G,\left(\frac{\mathcal{AL}_{G} + \mathcal{\widetilde{AL}}_{G} + \mathcal{ANL}_{G}}{\mathcal{L}_{G} + \mathcal{\widetilde{L}}_{G} + \mathcal{NL}_{G}}\right)\rangle$ \Comment{{\scriptsize \textit{Use $h_{\widetilde{GR}}$ heuristic for calculating the estimated value for G}.}} \label{alg:RecognizeIncompleteDomains:Heuristic}
+				\State $\mathcal{H}_{\mathcal{G}} := \mathcal{H}_{\mathcal{G}} \cup \langle G,\left(\frac{\mathcal{AL}_{G} + \mathcal{\widetilde{AL}}_{G} + \mathcal{ANL}_{G}}{\mathcal{L}_{G} + \mathcal{\widetilde{L}}_{G} + \mathcal{NL}_{G}}\right)\rangle$ \Comment{{\scriptsize Estimate value for G using the \textit{Use $h_{\widetilde{GR}}$ heuristic}.}} \label{alg:RecognizeIncompleteDomains:Heuristic}
 			\EndFor
 			\State \textbf{return} {all $G$ s.t $\langle G, v \rangle \in \mathcal{H}_{\mathcal{G}}$ and \newline \hspace*{\algorithmicindent}{\phantom{return }} $v \geq (\max_{v_i}{ \langle G',v_i \rangle \in \mathcal{H}_{\mathcal{G}}})$} \label{alg:RecognizeIncompleteDomains:Return}
 	        \EndFunction
@@ -1739,7 +1781,16 @@ $$h_{\widetilde{GR}}(G) = \left(\frac{\mathcal{AL}_{G} + \mathcal{\widetilde{AL}
 \subsection{Results}
 
 \begin{frame}[c]\frametitle{Experiments}
-	
+	\begin{itemize}
+		\item Our evaluation uses a modified version of our IPC dataset
+		\item We automatically generated incomplete versions of these domains:
+		\begin{enumerate}
+			\item randomly move a percentage of known preconditions and effects into possible lists of preconditions and effects; 
+			\item randomly add possible preconditions from delete effects that are not preconditions of a corresponding operator; and 
+			\item randomly add into possible lists \\(of preconditions, add effects, or delete effects) predicates whose parameters fit into the operator signatures.
+		\end{enumerate}
+		\item Evaluated accuracy and runtime
+	\end{itemize}
 \end{frame}
 
 \begin{frame}[c]\frametitle{Results Low Incompleteness}
@@ -1766,6 +1817,10 @@ $$h_{\widetilde{GR}}(G) = \left(\frac{\mathcal{AL}_{G} + \mathcal{\widetilde{AL}
 		\includegraphics[width=.9\linewidth]{roc_space_incomplete/rocspace-domain_incompleteness-80.pdf}
 		\end{column}
 	\end{columns}
+\end{frame}
+
+\begin{frame}[c]\frametitle{Recognition Time}
+	\todo{Add graph from Ramon}
 \end{frame}
 
 \fi
@@ -2561,24 +2616,40 @@ $$h_{\widetilde{GR}}(G) = \left(\frac{\mathcal{AL}_{G} + \mathcal{\widetilde{AL}
 	\end{itemize}
 \end{frame}
 
-\if\masterclass1
-\begin{frame}[c]\frametitle{Master Class Plug}
-	If this talk was interesting and you want to know more, please come to:\\[2em]
-	\begin{center}
-		{\Large
-		Plan Recognition Master Class \\[2em] University of Aberdeen -- 16th October 2017
-		}
-	\end{center}
-	We will cover:
-	\begin{itemize}
-		\item Detailed algorithms
-		\item Worked out examples
-		\item Plan recognition with incomplete \textbf{domains}
-		\item Much more
-	\end{itemize}
-\end{frame}
+% \if\masterclass1
+% \begin{frame}[c]\frametitle{Master Class Plug}
+% 	If this talk was interesting and you want to know more, please come to:\\[2em]
+% 	\begin{center}
+% 		{\Large
+% 		Plan Recognition Master Class \\[2em] University of Aberdeen -- 16th October 2017
+% 		}
+% 	\end{center}
+% 	We will cover:
+% 	\begin{itemize}
+% 		\item Detailed algorithms
+% 		\item Worked out examples
+% 		\item Plan recognition with incomplete \textbf{domains}
+% 		\item Much more
+% 	\end{itemize}
+% \end{frame}
+%
+% \fi
 
-\fi
+% \begin{frame}[c]\frametitle{Research Plug}
+% 	If this class was interesting and you want to do research, consider a PhD:\\[2em]
+% 	\begin{center}
+% 		{\Large
+% 		Plan Recognition Master Class \\[2em] University of Aberdeen -- 16th October 2017
+% 		}
+% 	\end{center}
+% 	We will cover:
+% 	\begin{itemize}
+% 		\item Detailed algorithms
+% 		\item Worked out examples
+% 		\item Plan recognition with incomplete \textbf{domains}
+% 		\item Much more
+% 	\end{itemize}
+% \end{frame}
 
 
 
@@ -2588,7 +2659,6 @@ $$h_{\widetilde{GR}}(G) = \left(\frac{\mathcal{AL}_{G} + \mathcal{\widetilde{AL}
     		\centering
     		Thank you!
 			\\
-			Questions?
     \end{frame}
     }
 
