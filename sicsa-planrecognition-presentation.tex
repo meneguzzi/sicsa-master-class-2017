@@ -12,6 +12,8 @@
 \usepackage{amsmath}
 \usepackage{amssymb}
 
+\usepackage{pgfplots}
+
 \usepackage{mathtools}
 \newcommand\myeq{\stackrel{\mathclap{\normalfont\mbox{def}}}{=}}
 
@@ -380,7 +382,16 @@ morekeywords={defdomain,defproblem,:domain,:method,:operator
 % 		\end{itemize}
 % 	\end{frame}
 	\begin{frame}[c]\frametitle{Motivation}
-		\todo{Motivation}
+		\begin{itemize}
+			\item Plan Recognition as Planning (PRAP) requires much less domain knowledge  \\
+			No need for a plan library
+			\item Existing approaches are accurate, but very inefficient
+			\item Key Insight: Landmark-based heuristics are efficient and informative\\
+			\begin{itemize}
+				\item landmarks provide evidence of \textbf{expected sequence} of observations
+				\item can be computed once before recognition time
+			\end{itemize}
+		\end{itemize}
 	\end{frame}
 	
 	\begin{frame}[c]\frametitle{Previous Work: Ramirez and Geffner}
@@ -398,7 +409,13 @@ morekeywords={defdomain,defproblem,:domain,:method,:operator
 		\end{itemize}
 	\end{frame}
 	\begin{frame}[c]\frametitle{Previous Work: E-Martín et al.}
-		
+		\begin{itemize}
+			\item Improvement over Ramirez's approach:
+			\begin{itemize}
+				\item Based on pre-computation of cost estimates using a planning graph
+				\item Often orders of magnitude faster than 
+			\end{itemize}
+		\end{itemize}
 	\end{frame}
 	\begin{frame}[c]\frametitle{Previous Work: Sohrabi et al.}
 		
@@ -1043,23 +1060,23 @@ morekeywords={defdomain,defproblem,:domain,:method,:operator
 	\end{frame}
 	
 \if\masterclass1
-	\begin{frame}[c]\frametitle{Previous Work: Ramirez and Geffner}
-		\if\masterclass1
-		\todo{Move this to the background}
-		\fi
-		\begin{itemize}
-			\item First approaches to goal recognition: Plan Recognition as Planning (PRAP)
-			\item Probabilistic model aims to compute $P(G \mid O)$
-			\item Following Bayes Rule $P(G \mid O) = \alpha P(O \mid G) P(G)$
-			\item Given $P(G)$ as a prior, key bottleneck is computing $P(O \mid G)$
-			\begin{itemize}
-				\item In their work $P(O \mid G)$ is computed in terms of a cost difference $c(G,O) - c(G,\bar{O})$
-				\item Computational cost is \textbf{two planner calls per goal hypothesis}
-				\item For online recognition: two planner calls per goal hypothesis \textbf{per observation}
-			\end{itemize}
-			\item Some conclusions challenged for path planning domains\\ (Masters and Sardina 2017)
-		\end{itemize}
-	\end{frame}
+	% \begin{frame}[c]\frametitle{Previous Work: Ramirez and Geffner}
+% 		\if\masterclass1
+% 		\todo{Move this to the background}
+% 		\fi
+% 		\begin{itemize}
+% 			\item First approaches to goal recognition: Plan Recognition as Planning (PRAP)
+% 			\item Probabilistic model aims to compute $P(G \mid O)$
+% 			\item Following Bayes Rule $P(G \mid O) = \alpha P(O \mid G) P(G)$
+% 			\item Given $P(G)$ as a prior, key bottleneck is computing $P(O \mid G)$
+% 			\begin{itemize}
+% 				\item In their work $P(O \mid G)$ is computed in terms of a cost difference $c(G,O) - c(G,\bar{O})$
+% 				\item Computational cost is \textbf{two planner calls per goal hypothesis}
+% 				\item For online recognition: two planner calls per goal hypothesis \textbf{per observation}
+% 			\end{itemize}
+% 			\item Some conclusions challenged for path planning domains\\ (Masters and Sardina 2017)
+% 		\end{itemize}
+% 	\end{frame}
 	
 	\begin{frame}[c]\frametitle{Previous Work: Goal Mirroring}
 		\begin{itemize}
@@ -1704,6 +1721,10 @@ $$h_{\widetilde{GR}}(G) = \left(\frac{\mathcal{AL}_{G} + \mathcal{\widetilde{AL}
 
 \subsection{Results}
 
+\begin{frame}[c]\frametitle{Experiments}
+	
+\end{frame}
+
 \begin{frame}[c]\frametitle{Results Low Incompleteness}
 	\begin{columns}
 		\begin{column}{0.45\textwidth}
@@ -1794,7 +1815,39 @@ $$h_{\widetilde{GR}}(G) = \left(\frac{\mathcal{AL}_{G} + \mathcal{\widetilde{AL}
 \end{frame}
 
 \begin{frame}[c]\frametitle{Roboschool Example}
-	\todo{Complete with the Roboschool example}
+	\begin{columns}
+		\begin{column}[t]{0.5\textwidth}
+			{\color{red} Optimal Plan}\\
+				\texttt{(walk roomb\_3 roomb\_4)}\\
+				\texttt{(walk roomb\_4 rooma\_4)}\\
+				\texttt{(pick p3 rooma\_4)}\\
+				\texttt{(walk rooma\_4 roomb\_4)}\\
+				\texttt{(walk roomb\_4 roomb\_3)}\\
+				\texttt{(walk roomb\_3 roomb\_2)}\\
+				\texttt{(walk roomb\_2 roomc\_2)}\\
+				\texttt{(throw p3 roomc\_2 roomd\_2 b1)}\\
+				\texttt{(pick p4 roomc\_2)}\\
+				\texttt{(throw p4 roomc\_2 roomd\_2 b1)}\\
+		\end{column}
+			\begin{column}[t]{0.5\textwidth}
+				{\color{red} Suboptimal Plan}\\
+				\texttt{(walk roomb\_3 roomb\_4)}\\
+				\texttt{(walk roomb\_4 rooma\_4)}\\
+				\texttt{(pick p3 rooma\_4)}\\
+				\texttt{(walk rooma\_4 roomb\_4)}\\
+				\texttt{(walk roomb\_4 roomb\_3)}\\
+				\texttt{(walk roomb\_3 roomb\_2)}\\
+				\only<1>{\texttt{(walk roomb\_2 roomb\_1)}} 
+				\only<2>{ {\color{red} \texttt{(walk roomb\_2 roomb\_1)} } }\\
+				\only<1>{ \texttt{(walk roomb\_1 roomc\_1)} }
+				\only<2>{{\color{red} \texttt{(walk roomb\_1 roomc\_1)} }}
+				\\
+				\texttt{(walk roomc\_1 roomc\_2)}\\
+				\texttt{(throw p3 roomc\_2 roomd\_2 b1)}\\
+				\texttt{(pick p4 roomc\_2)}\\
+				\texttt{(throw p4 roomc\_2 roomd\_2 b1)}\\
+		\end{column}
+	\end{columns}
 \end{frame}
 
 %---------------------------------------------------------------------------------
@@ -1883,6 +1936,106 @@ $$h_{\widetilde{GR}}(G) = \left(\frac{\mathcal{AL}_{G} + \mathcal{\widetilde{AL}
         		\State \textbf{return} $A_{SubOptimal}$
         \EndFunction
     \end{algorithmic}
+\end{frame}
+
+\begin{frame}[c]\frametitle{Example 1: Optimal Plan}
+	\begin{columns}
+		\begin{column}[t]{0.5\textwidth}
+			{\Large Observations}\\
+			\texttt{(walk roomb\_3 roomb\_4)}\\
+			\texttt{(walk roomb\_4 rooma\_4)}\\
+			\texttt{(pick p3 rooma\_4)}\\
+			\texttt{(walk rooma\_4 roomb\_4)}\\
+			\texttt{(walk roomb\_4 roomb\_3)}\\
+			\texttt{(walk roomb\_3 roomb\_2)}\\
+			\texttt{(walk roomb\_2 roomc\_2)}\\
+			\texttt{(throw p3 roomc\_2 roomd\_2 b1)}\\
+			\texttt{(pick p4 roomc\_2)}\\
+			\texttt{(throw p4 roomc\_2 roomd\_2 b1)}\\
+			
+		\end{column}
+		\begin{column}[t]{0.5\textwidth}
+			{\Large $h_{\mathit{ff}}(o)$}
+			\begin{tikzpicture}
+				\begin{axis}[width=\textwidth,axis x line=bottom, axis y line=left, tick align=outside, xmin=0, ymin=0, xmax=12, ymax=10, xlabel=$o_{i}$, ylabel=$h_{\mathit{ff}}(o_{i})$]
+					\addplot+[] coordinates{
+											(0,8)
+											(1,9)
+											(2,9)
+											(3,9)
+											(4,8)
+											(5,6)
+											(6,4)
+											(7,3)
+											(8,2)
+											(9,1)
+											(10,0)
+											};
+					% \node[pin=0:{\small$\theta_1=0.5$}] at (axis cs:1,1) {};
+% 					\addplot+[mark=none,smooth] (\x,{0.5*\x});
+				\end{axis}
+			\end{tikzpicture}
+		\end{column}
+	\end{columns}
+\end{frame}
+
+\begin{frame}[c]\frametitle{Example 2: Suboptimal Plan}
+	\begin{columns}
+		\begin{column}[t]{0.5\textwidth}
+			{\Large Observations}\\
+			\texttt{(walk roomb\_3 roomb\_4)}\\
+			\texttt{(walk roomb\_4 rooma\_4)}\\
+			\texttt{(pick p3 rooma\_4)}\\
+			\texttt{(walk rooma\_4 roomb\_4)}\\
+			\texttt{(walk roomb\_4 roomb\_3)}\\
+			\texttt{(walk roomb\_3 roomb\_2)}\\
+			\only<1>{\texttt{(walk roomb\_2 roomb\_1)}} 
+			\only<2>{ {\color{red} \texttt{(walk roomb\_2 roomb\_1)} } }\\
+			\only<1>{ \texttt{(walk roomb\_1 roomc\_1)} }
+			\only<2>{{\color{red} \texttt{(walk roomb\_1 roomc\_1)} }}
+			\\
+			\texttt{(walk roomc\_1 roomc\_2)}\\
+			\texttt{(throw p3 roomc\_2 roomd\_2 b1)}\\
+			\texttt{(pick p4 roomc\_2)}\\
+			\texttt{(throw p4 roomc\_2 roomd\_2 b1)}\\
+			
+			\vspace{1em}
+			\only<2>{Suboptimal actions:\\ \texttt{(walk roomb\_2 roomb\_1)}}
+		\end{column}
+		\begin{column}[t]{0.5\textwidth}
+			{\Large $h_{\mathit{ff}}(o)$}
+			\begin{tikzpicture}
+				\begin{axis}[width=\textwidth,axis x line=bottom, axis y line=left, tick align=outside, xmin=0, ymin=0, xmax=12, ymax=10, xlabel=$o_{i}$, ylabel=$h_{\mathit{ff}}(o_{i})$]
+					\addplot+[] coordinates{
+											(0,8)
+											(1,9)
+											(2,9)
+											(3,9)
+											(4,8)
+											(5,6)
+											(6,4)
+											(7,5)
+											(8,4)
+											(9,3)
+											(10,2)
+											(11,1)
+											(11,0)
+											};
+					\only<2>{
+						\addplot+[only marks, color=red] coordinates{
+											(7,5)
+											};
+					     \node[pin=90:{\tiny \texttt{(walk roomb\_2 roomb\_1)}}] at (axis cs:7,5) {};}
+% 					\addplot+[mark=none,smooth] (\x,{0.5*\x});
+				\end{axis}
+			\end{tikzpicture}
+			\only<2>{Step 7: \texttt{(walk roomb\_2 roomb\_1)}\\
+			Expected Landmarks: None \\
+			$h_{\mathit{ff}}(o_{7}) = 5$ 
+			$h_{\mathit{ff}}(o_{6}) = 4$ 
+			}
+		\end{column}
+	\end{columns}
 \end{frame}
 	
 %---------------------------------------------------------------------------------
@@ -2321,7 +2474,7 @@ $$h_{\widetilde{GR}}(G) = \left(\frac{\mathcal{AL}_{G} + \mathcal{\widetilde{AL}
 %---------------------------------------------------------------------------------
 \section{Summary and Future Directions}
 
-\begin{frame}[c]\frametitle{Papers reporting these results}
+\begin{frame}[c]\frametitle{Publications}
 	\footnotesize
 	\begin{itemize}
 	\item[] FRAGA PEREIRA, Ramon; MENEGUZZI, Felipe. \textbf{Landmark-based Plan Recognition.} ECAI, 2016.
