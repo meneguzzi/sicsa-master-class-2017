@@ -17,9 +17,9 @@ Plan and goal recognition is the task of inferring the plan and goal of an agent
 | 12h30     | Lunch break                               |  - |
 | 13h30 | Goal Recognition with Landmarks - Part 2             |  Room 224 |
 | 14h30 | Break             |  -  |
-| 15h00 | Online Goal Recognition             |  Room 224 |
-| 15h30 | Goal Recognition in Incomplete Domains             |  Room 224 |
-| 16h00 | Applications             |  Room 224 |
+| 14h45 | Online Goal Recognition             |  Room 224 |
+| 15h15 | Goal Recognition in Incomplete Domains             |  Room 224 |
+| 16h40 | Applications             |  Room 224 |
 
 ## Related Software
 
