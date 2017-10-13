@@ -851,6 +851,76 @@ morekeywords={defdomain,defproblem,:domain,:method,:operator
 	\end{frame}	
 \fi
 
+    \begin{frame}{Example (1 of 3)}
+		\begin{figure}[here]
+			\centering
+			\includegraphics[width=0.75\linewidth]{example-blocksworld.pdf}
+		\end{figure}
+       	\begin{itemize}
+       		\item Observations:
+				\begin{itemize}
+					\item \texttt{(unstack D B)}; and
+					\item \texttt{(unstack C A)}.
+				\end{itemize}
+			\item The real goal is: \texttt{(and (ontable D) (on C D) (clear C))}
+		\end{itemize}
+    \end{frame}
+
+\newcommand{\achieved}[1]{{\color{red}#1}}
+
+    \begin{frame}{Example (2 of 3)}
+		\textbf{Achieved Landmarks in Observations:}
+       	\begin{itemize}
+       		\item \texttt{(and (ontable D) (clear A) (on A D))}:%, 5 out of 8:
+				\begin{itemize}\scriptsize \setlength{\itemindent}{-3em}
+					% \item {\scriptsize \texttt{[(clear A)]}, \texttt{[(clear A) (ontable A) (handempty)]},
+% 					\\ \texttt{[(on C A) (clear C) (handempty)]}, \texttt{[(holding D)]},
+% 					\\ \texttt{[(clear D) (on D B) (handempty)]}}
+					\item[] \texttt{(clear a) $\rightarrow$ \achieved{[(on c a), (clear c), (handempty)]}, \achieved{[(clear a)]}}, % 2 achieved 
+					\item[] \texttt{(on a d) $\rightarrow$ \achieved{[(on c a), (clear c), (handempty)]}, \break \achieved{[(clear a), (ontable a), (handempty)]}, \break [(holding a), (clear d)], [(on a d)]}, % 2 achieved
+					\item[] \texttt{(ontable d) $\rightarrow$ \achieved{[(clear d), (on d b), (handempty)]}, \achieved{[(holding d)]}, \break [(ontable d)]} % 2 achieved
+				\end{itemize}
+				
+			\item \texttt{(and (ontable D) (clear B) (on B D)), 4 out of 7}:
+				\begin{itemize}\scriptsize \setlength{\itemindent}{-3em}
+					% \item {\scriptsize \texttt{[(clear B)]}, \texttt{[(ontable B) (handempty)]},
+% 					\\ \texttt{[(on D B) (clear D) (handempty)]}, \texttt{[(holding D)]}}
+					\item[] \texttt{(clear b) $\rightarrow$ \achieved{[(clear d), (on d b), (handempty)]}, \achieved{[(clear b)]}} % 2 achieved
+					\item[] \texttt{(on b d) $\rightarrow$ \achieved{[(ontable b), (handempty)]}, [(clear d), (holding b)], [(on b d)]} % 1 achieved 
+					\item[] \texttt{(ontable d) $\rightarrow$ \achieved{[(clear d), (on d b), (handempty)]}, \achieved{[(holding d)]}, \break [(ontable d)]} % 2 achieved
+				\end{itemize}
+			
+			\item \texttt{(and (ontable D) (clear C) (on C D)), 5 out of 7}:
+				\begin{itemize}\scriptsize \setlength{\itemindent}{-3em}
+					% \item {\scriptsize \texttt{[(clear C)]}, \texttt{[(clear C) (on C A) (handempty)]}, \texttt{[(clear D) (holding C)]}
+% 					\\ \texttt{[(clear D) (on D B) (handempty)]}, \texttt{[(holding D)]}}
+					\item[] \texttt{(on c d) $\rightarrow$ \achieved{[(on c a), (clear c), (handempty)]}, \achieved{[(holding c), (clear d)]}, [on c d]} % 2 achieved
+					\item[] \texttt{(ontable d) $\rightarrow$ \achieved{[(clear d), (on d b) (handempty)]}, \achieved{[(holding d)]}, [ontable d]} % 2 achieved 
+					\item[] \texttt{(clear c) $\rightarrow$ \achieved{[(clear c)]}} % 1 achieved
+				\end{itemize}
+		\end{itemize}
+    \end{frame}
+
+    \begin{frame}{Example (3 of 3) - $h_{gc}$}
+		\textbf{Landmark-Based Goal Completion Heuristic}
+		% TODO break this down in more detail
+       	\begin{itemize}
+       		\item \texttt{(and (ontable D) (clear A) (on A D))}:%, 5 out of 8:
+				\begin{itemize}
+					%\item Goal Completion: 0.7222
+					\item Goal Completion: $\displaystyle \frac{\frac{2}{2}+\frac{2}{4}+\frac{2}{3}}{3} =  0.7222$
+				\end{itemize}
+			\item \texttt{(and (ontable D) (clear B) (on B D))}:%, 4 out of 7:
+				\begin{itemize}
+					\item Goal Completion: $\displaystyle \frac{\frac{2}{2}+\frac{1}{3}+\frac{2}{3}}{3} =  0.6666$
+				\end{itemize}
+			\item \texttt{(and (ontable D) (clear C) (on C D))}:%, 5 out of 7:
+				\begin{itemize}
+					\item Goal Completion: $\displaystyle \frac{\frac{2}{3}+\frac{2}{3}+\frac{1}{1}}{3} =  0.7733$ \textbf{(highest estimated value)}
+				\end{itemize}
+		\end{itemize}
+    \end{frame}
+
 %---------------------------------------------------------------------------------
 
     \begin{frame}{Landmark-Based Uniqueness Heuristic (1 of 2)}
@@ -913,9 +983,7 @@ morekeywords={defdomain,defproblem,:domain,:method,:operator
     \end{frame}	
 \fi
 %---------------------------------------------------------------------------------
-
-% \if\masterclass1
-    \begin{frame}{Example (1 of 4)}
+    \begin{frame}{Example (1 of 2)}
 		\begin{figure}[here]
 			\centering
 			\includegraphics[width=0.75\linewidth]{example-blocksworld.pdf}
@@ -930,62 +998,7 @@ morekeywords={defdomain,defproblem,:domain,:method,:operator
 		\end{itemize}
     \end{frame}
 
-\newcommand{\achieved}[1]{{\color{red}#1}}
-
-    \begin{frame}{Example (2 of 4)}
-		\textbf{Achieved Landmarks in Observations:}
-       	\begin{itemize}
-       		\item \texttt{(and (ontable D) (clear A) (on A D))}:%, 5 out of 8:
-				\begin{itemize}\scriptsize \setlength{\itemindent}{-3em}
-					% \item {\scriptsize \texttt{[(clear A)]}, \texttt{[(clear A) (ontable A) (handempty)]},
-% 					\\ \texttt{[(on C A) (clear C) (handempty)]}, \texttt{[(holding D)]},
-% 					\\ \texttt{[(clear D) (on D B) (handempty)]}}
-					\item[] \texttt{(clear a) $\rightarrow$ \achieved{[(on c a), (clear c), (handempty)]}, \achieved{[(clear a)]}}, % 2 achieved 
-					\item[] \texttt{(on a d) $\rightarrow$ \achieved{[(on c a), (clear c), (handempty)]}, \break \achieved{[(clear a), (ontable a), (handempty)]}, \break [(holding a), (clear d)], [(on a d)]}, % 2 achieved
-					\item[] \texttt{(ontable d) $\rightarrow$ \achieved{[(clear d), (on d b), (handempty)]}, \achieved{[(holding d)]}, \break [(ontable d)]} % 2 achieved
-				\end{itemize}
-				
-			\item \texttt{(and (ontable D) (clear B) (on B D)), 4 out of 7}:
-				\begin{itemize}\scriptsize \setlength{\itemindent}{-3em}
-					% \item {\scriptsize \texttt{[(clear B)]}, \texttt{[(ontable B) (handempty)]},
-% 					\\ \texttt{[(on D B) (clear D) (handempty)]}, \texttt{[(holding D)]}}
-					\item[] \texttt{(clear b) $\rightarrow$ \achieved{[(clear d), (on d b), (handempty)]}, \achieved{[(clear b)]}} % 2 achieved
-					\item[] \texttt{(on b d) $\rightarrow$ \achieved{[(ontable b), (handempty)]}, [(clear d), (holding b)], [(on b d)]} % 1 achieved 
-					\item[] \texttt{(ontable d) $\rightarrow$ \achieved{[(clear d), (on d b), (handempty)]}, \achieved{[(holding d)]}, \break [(ontable d)]} % 2 achieved
-				\end{itemize}
-			
-			\item \texttt{(and (ontable D) (clear C) (on C D)), 5 out of 7}:
-				\begin{itemize}\scriptsize \setlength{\itemindent}{-3em}
-					% \item {\scriptsize \texttt{[(clear C)]}, \texttt{[(clear C) (on C A) (handempty)]}, \texttt{[(clear D) (holding C)]}
-% 					\\ \texttt{[(clear D) (on D B) (handempty)]}, \texttt{[(holding D)]}}
-					\item[] \texttt{(on c d) $\rightarrow$ \achieved{[(on c a), (clear c), (handempty)]}, \achieved{[(holding c), (clear d)]}, [on c d]} % 2 achieved
-					\item[] \texttt{(ontable d) $\rightarrow$ \achieved{[(clear d), (on d b) (handempty)]}, \achieved{[(holding d)]}, [ontable d]} % 2 achieved 
-					\item[] \texttt{(clear c) $\rightarrow$ \achieved{[(clear c)]}} % 1 achieved
-				\end{itemize}
-		\end{itemize}
-    \end{frame}
-
-    \begin{frame}{Example (3 of 4) - $h_{gc}$}
-		\textbf{Landmark-Based Goal Completion Heuristic}
-		% TODO break this down in more detail
-       	\begin{itemize}
-       		\item \texttt{(and (ontable D) (clear A) (on A D))}:%, 5 out of 8:
-				\begin{itemize}
-					%\item Goal Completion: 0.7222
-					\item Goal Completion: $\displaystyle \frac{\frac{2}{2}+\frac{2}{4}+\frac{2}{3}}{3} =  0.7222$
-				\end{itemize}
-			\item \texttt{(and (ontable D) (clear B) (on B D))}:%, 4 out of 7:
-				\begin{itemize}
-					\item Goal Completion: $\displaystyle \frac{\frac{2}{2}+\frac{1}{3}+\frac{2}{3}}{3} =  0.6666$
-				\end{itemize}
-			\item \texttt{(and (ontable D) (clear C) (on C D))}:%, 5 out of 7:
-				\begin{itemize}
-					\item Goal Completion: $\displaystyle \frac{\frac{2}{3}+\frac{2}{3}+\frac{1}{1}}{3} =  0.7733$ \textbf{(highest estimated value)}
-				\end{itemize}
-		\end{itemize}
-    \end{frame}
-
-    \begin{frame}{Example (4 of 4) - $h_{uniq}$}
+    \begin{frame}{Example (2 of 2) - $h_{uniq}$}
 		\textbf{Landmark-Based Uniqueness Heuristic}
        	\begin{itemize}
        		\item \texttt{(and (ontable D) (clear A) (on A D))}, Total$_{Uniq}$ = 5.5:
