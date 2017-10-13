@@ -1338,16 +1338,17 @@ morekeywords={defdomain,defproblem,:domain,:method,:operator
 			\begin{column}{0.7\textwidth}
 			\begin{itemize}
 				\item Compute landmarks and optimal plans for all goals
-				\item For every observation:
-				\begin{itemize}
-					\item Compute plan prefix, and for every goal
+				\item For every observation:\\
+				Compute plan prefix, and for every goal
+				% \begin{itemize}
+				% 	\item Compute plan prefix, and for every goal
 					\begin{itemize}
 						\item Either prune goals that have \textbf{passed} the last landmark; or
 						\item Compute plan suffix (from last observation) using planner
 						\item Compute \textbf{cost ratio} between prefix+suffix and optimal plan
 					\end{itemize}
-				\end{itemize}
-				\item Rank unpruned goals based on a \textbf{normalized cost ratio}
+				% \end{itemize}
+				% \item Rank unpruned goals based on a \textbf{normalized cost ratio}
 			\end{itemize}
 			\end{column}
 			\begin{column}{0.3\textwidth}
@@ -1355,16 +1356,18 @@ morekeywords={defdomain,defproblem,:domain,:method,:operator
 			\end{column}
 		\end{columns}
 		\begin{itemize}
-			\item Ranks $P(g_k \mid O)$ using a normalizing factor $\eta 1/\sum_{g_k \in G} rank(g_k)$
+			\item Rank unpruned goals based on a \textbf{normalized cost ratio}\\
+			Computes $P(g_k \mid O)$ using a normalizing factor $\eta 1/\sum_{g_k \in G} rank(g_k)$
+			% \item Ranks $P(g_k \mid O)$ using a normalizing factor $\eta 1/\sum_{g_k \in G} rank(g_k)$
 			\item Approximates $P(g \mid O) = \eta \sum_{g_k \in G} P(O \mid g_k) P(g_k)$ for all goals, assuming $P(g_k) = 0$ for pruned goals 
 		\end{itemize}
 	\end{frame}
 	
-	\if\masterclass1
-	\begin{frame}[c]\frametitle{Goal Mirroring with Landmarks}
-		\todo{Algorithm and example for masterclass}
-	\end{frame}
-	\fi
+	% \if\masterclass1
+	% \begin{frame}[c]\frametitle{Goal Mirroring with Landmarks}
+	% 	\todo{Algorithm and example for masterclass}
+	% \end{frame}
+	% \fi
 	
 	\begin{frame}[c]\frametitle{Continuous Evaluation}
 		\begin{columns}
@@ -1384,36 +1387,42 @@ morekeywords={defdomain,defproblem,:domain,:method,:operator
 
 % \if\masterclass1
 	\begin{frame}[c]\frametitle{Discrete Evaluation}
-		\begin{columns}
-			\begin{column}{0.7\textwidth}
-				\begin{itemize}
-					\item Dataset expanded from Ramirez and Geffner's original work
-					\item Domains extracted from the IPC competition
-					\item Hundreds of goal recognition problems
-				\end{itemize}
-			\end{column}
-			\begin{column}{0.3\textwidth}
-			Domains
-			\begin{itemize}
-				\tiny
-				\item \textsc{Blocks-World}
-				\item \textsc{Campus}
-				\item \textsc{Depots}
-				\item \textsc{Driver-Log}
-				\item \textsc{Dock-Worker-Robots}
-				\item \textsc{Easy-IPC-Grid}
-				\item \textsc{Ferry}
-				\item \textsc{Intrusion-Detection}
-				\item \textsc{Kitchen}
-				\item \textsc{Logistics}
-				\item \textsc{Miconic}
-				\item \textsc{Rovers}
-				\item \textsc{Satellite}
-				\item \textsc{Sokoban}; and
-				\item \textsc{Zeno-Travel}
-			\end{itemize}
-			\end{column}
-		\end{columns}
+		\begin{itemize}
+			\item Dataset expanded from Ramirez and Geffner's original work
+			\item Domains extracted from the IPC competition\\
+			{\footnotesize \textsc{Blocks-World, Campus, Depots, Driver-Log, Dock-Worker-Robots, Easy-IPC-Grid, Ferry, Intrusion-Detection, Kitchen, Logistics, Miconic, Rovers, Satellite, Sokoban, and Zeno-Travel}}; 
+			\item Hundreds of goal recognition problems
+		\end{itemize}
+		% \begin{columns}
+% 			\begin{column}{0.7\textwidth}
+% 				\begin{itemize}
+% 					\item Dataset expanded from Ramirez and Geffner's original work
+% 					\item Domains extracted from the IPC competition
+% 					\item Hundreds of goal recognition problems
+% 				\end{itemize}
+% 			\end{column}
+% 			\begin{column}{0.3\textwidth}
+% 			Domains
+% 			\begin{itemize}
+% 				\tiny
+% 				\item \textsc{Blocks-World}
+% 				\item \textsc{Campus}
+% 				\item \textsc{Depots}
+% 				\item \textsc{Driver-Log}
+% 				\item \textsc{Dock-Worker-Robots}
+% 				\item \textsc{Easy-IPC-Grid}
+% 				\item \textsc{Ferry}
+% 				\item \textsc{Intrusion-Detection}
+% 				\item \textsc{Kitchen}
+% 				\item \textsc{Logistics}
+% 				\item \textsc{Miconic}
+% 				\item \textsc{Rovers}
+% 				\item \textsc{Satellite}
+% 				\item \textsc{Sokoban}; and
+% 				\item \textsc{Zeno-Travel}
+% 			\end{itemize}
+% 			\end{column}
+% 		\end{columns}
 	\end{frame}
 % \fi
 
@@ -1849,11 +1858,11 @@ $$h_{\widetilde{GR}}(G) = \left(\frac{\mathcal{AL}_{G} + \mathcal{\widetilde{AL}
 			\item randomly add possible preconditions from delete effects that are not preconditions of a corresponding operator; and 
 			\item randomly add into possible lists \\(of preconditions, add effects, or delete effects) predicates whose parameters fit into the operator signatures.
 		\end{enumerate}
-		\item Evaluated accuracy and runtime
+		\item Results show accuracy and runtime
 	\end{itemize}
 \end{frame}
 
-\begin{frame}[c]\frametitle{Results Low Incompleteness}
+\begin{frame}[c]\frametitle{Accuracy for Low Incompleteness}
 	\begin{columns}
 		\begin{column}{0.45\textwidth}
 			\centering
@@ -1866,7 +1875,7 @@ $$h_{\widetilde{GR}}(G) = \left(\frac{\mathcal{AL}_{G} + \mathcal{\widetilde{AL}
 	\end{columns}
 \end{frame}
 
-\begin{frame}[c]\frametitle{Results High Incompleteness}
+\begin{frame}[c]\frametitle{Accuracy for High Incompleteness}
 	\begin{columns}
 		\begin{column}{0.45\textwidth}
 			\centering
@@ -1879,7 +1888,7 @@ $$h_{\widetilde{GR}}(G) = \left(\frac{\mathcal{AL}_{G} + \mathcal{\widetilde{AL}
 	\end{columns}
 \end{frame}
 
-\begin{frame}[c]\frametitle{Recognition Time}
+\begin{frame}[c]\frametitle{Recognition Runtime}
 	\todo{Add graph from Ramon}
 \end{frame}
 
@@ -1910,24 +1919,24 @@ $$h_{\widetilde{GR}}(G) = \left(\frac{\mathcal{AL}_{G} + \mathcal{\widetilde{AL}
 
 %---------------------------------------------------------------------------------
 
-\begin{frame}[c]\frametitle{Background: Planning, Heuristics, and Landmarks}
-	\vspace{-2mm}
-	\begin{definition}[Planning]
-		A planning instance is represented by a triple $\Pi = \langle \Xi, \mathcal{I}, G\rangle$, in which:
-		\begin{itemize}
-			\item $\Xi= \langle \Sigma, \mathcal{A}\rangle$ is the \textbf{domain definition}, and consists of a finite set of \textbf{facts} $\Sigma$ and a finite set of \textbf{actions} $\mathcal{A}$ (action costs $=$ 1);
-			\item $\mathcal{I}$ and $G$ represent the \textbf{planning problem}, in which $\mathcal{I}$ $\subseteq$ $\Sigma$ is the \textbf{initial state}, and $G$ $\subseteq$ $\Sigma$ is the \textbf{goal state}.
-		\end{itemize}
-	\end{definition}
-	\vspace{-3mm}
-	\begin{itemize}
-		\item \textbf{Heuristics} are used to estimate the cost to achieve a particular goal. In this work, we use \textbf{domain-independent heuristics};
-	\end{itemize}
-	\vspace{-3mm}
-	\begin{definition}[Landmarks]
-		Given a planning instance $\Pi = \langle \Xi, \mathcal{I}, G\rangle$, a \textbf{fact} (or \textbf{action}) $L$ is a landmark in $\Pi$ iff $L$ 	must be \textbf{satisfied} (or \textbf{executed}) at some point along all valid plans that achieve $G$ from $\mathcal{I}$.
-	\end{definition}
-\end{frame}
+% \begin{frame}[c]\frametitle{Background: Planning, Heuristics, and Landmarks}
+% 	\vspace{-2mm}
+% 	\begin{definition}[Planning]
+% 		A planning instance is represented by a triple $\Pi = \langle \Xi, \mathcal{I}, G\rangle$, in which:
+% 		\begin{itemize}
+% 			\item $\Xi= \langle \Sigma, \mathcal{A}\rangle$ is the \textbf{domain definition}, and consists of a finite set of \textbf{facts} $\Sigma$ and a finite set of \textbf{actions} $\mathcal{A}$ (action costs $=$ 1);
+% 			\item $\mathcal{I}$ and $G$ represent the \textbf{planning problem}, in which $\mathcal{I}$ $\subseteq$ $\Sigma$ is the \textbf{initial state}, and $G$ $\subseteq$ $\Sigma$ is the \textbf{goal state}.
+% 		\end{itemize}
+% 	\end{definition}
+% 	\vspace{-3mm}
+% 	\begin{itemize}
+% 		\item \textbf{Heuristics} are used to estimate the cost to achieve a particular goal. In this work, we use \textbf{domain-independent heuristics};
+% 	\end{itemize}
+% 	\vspace{-3mm}
+% 	\begin{definition}[Landmarks]
+% 		Given a planning instance $\Pi = \langle \Xi, \mathcal{I}, G\rangle$, a \textbf{fact} (or \textbf{action}) $L$ is a landmark in $\Pi$ iff $L$ 	must be \textbf{satisfied} (or \textbf{executed}) at some point along all valid plans that achieve $G$ from $\mathcal{I}$.
+% 	\end{definition}
+% \end{frame}
 
 %---------------------------------------------------------------------------------
 
