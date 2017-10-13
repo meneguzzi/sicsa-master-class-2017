@@ -262,15 +262,31 @@ morekeywords={defdomain,defproblem,:domain,:method,:operator
 		\end{columns}
 	\end{frame}
 	
-	\begin{frame}[c]\frametitle{Automated Planning: Plans}
-		\begin{definition} [\textbf{Planning}]
-			A planning instance is represented by a triple $\Pi = \langle \Xi, \mathcal{I}, G\rangle$, in which:
-			\begin{itemize}
-				\item $\Xi = \langle \Sigma, \mathcal{A} \rangle$ is the \textbf{domain definition}, and consists of a finite set of \textbf{facts} $\Sigma$ and a finite set of \textbf{actions} $\mathcal{A}$ (action costs typically 1);
-				\item $\mathcal{I} \subseteq \Sigma$ and $G \subseteq \Sigma$ represent the \textbf{planning problem}, in which $\mathcal{I} \subseteq \Sigma$ is the \textbf{initial state}, and $G \subseteq \Sigma$ is the \textbf{goal state}.
-			\end{itemize}
-		\end{definition}
-		A solution to a planning instance is a plan $\pi = \langle a_1, \dots a_n\rangle$ that modifies the initial state $\mathcal{I}$ into one where the goal state $\mathcal{G}$ holds by the successive application of actions $a_i \in \pi$
+	% \begin{frame}[c]\frametitle{Automated Planning: Plans}
+% 		\begin{definition} [\textbf{Planning}]
+% 			A planning instance is represented by a triple $\Pi = \langle \Xi, \mathcal{I}, G\rangle$, in which:
+% 			\begin{itemize}
+% 				\item $\Xi = \langle \Sigma, \mathcal{A} \rangle$ is the \textbf{domain definition}, and consists of a finite set of \textbf{facts} $\Sigma$ and a finite set of \textbf{actions} $\mathcal{A}$ (action costs typically 1);
+% 				\item $\mathcal{I} \subseteq \Sigma$ and $G \subseteq \Sigma$ represent the \textbf{planning problem}, in which $\mathcal{I} \subseteq \Sigma$ is the \textbf{initial state}, and $G \subseteq \Sigma$ is the \textbf{goal state}.
+% 			\end{itemize}
+% 		\end{definition}
+% 		A solution to a planning instance is a plan $\pi = \langle a_1, \dots a_n\rangle$ that modifies the initial state $\mathcal{I}$ into one where the goal state $\mathcal{G}$ holds by the successive application of actions $a_i \in \pi$
+% 	\end{frame}
+
+	\begin{frame}[c]\frametitle{Solving Planning Problems}
+		Actions $a \in \mathcal{A}$ are tuples $a = \langle \mathit{name}, \mathit{pre}(a), \mathit{eff}(a), \mathit{cost}(a) \rangle$.
+		They induce a state transition system such that:
+		\begin{itemize}
+			\item $\mathit{eff}(a)$ constitute a set of negative (delete) and positive (add) effects: $\mathit{eff}^{+}(a)$, $\mathit{eff}^{-}(a)$
+			\item an action $a$ is applicable to a state $s$ iff $s \models \mathit{pre}(a)$
+			\item applying $a$ to $s$ ($\gamma(s,a)$) yields a state $s' = (s / \mathit{eff}^{-}(a)) \cup  \mathit{eff}^{+}(a)$, \\i.e. it is such that $s' \models \mathit{eff}(a)$
+		\end{itemize}
+		The solution to a planning problem $\Pi = \langle \Xi, \mathcal{I}, G\rangle$ is a plan $\pi = \langle a_1, \dots, a_n\rangle$ such that:
+		\begin{itemize}
+			\item $\mathcal{I} \models \mathit{pre}(a_1)$
+			\item $\gamma(\gamma(\dots \gamma(I, a_1),\dots), a_n) \models G$
+			\item The cost of $\pi$ is $\sum_{i=1}^{n}\mathit{cost}(a_i)$
+		\end{itemize}
 	\end{frame}
 	
 	\begin{frame}[c]\frametitle{Roboschool PDDL Plan}
@@ -487,21 +503,21 @@ morekeywords={defdomain,defproblem,:domain,:method,:operator
 
 % \subsection{Planning Heuristics}
 	
-	\begin{frame}[c]\frametitle{Solving Planning Problems}
-		Actions $a \in \mathcal{A}$ are tuples $a = \langle \mathit{name}, \mathit{pre}(a), \mathit{eff}(a), \mathit{cost}(a) \rangle$.
-		They induce a state transition system such that:
-		\begin{itemize}
-			\item $\mathit{eff}(a)$ constitute a set of negative (delete) and positive (add) effects: $\mathit{eff}^{+}(a)$, $\mathit{eff}^{-}(a)$
-			\item an action $a$ is applicable to a state $s$ iff $s \models \mathit{pre}(a)$
-			\item applying $a$ to $s$ ($\gamma(s,a)$) yields a state $s' = (s / \mathit{eff}^{-}(a)) \cup  \mathit{eff}^{+}(a)$, \\i.e. it is such that $s' \models \mathit{eff}(a)$
-		\end{itemize}
-		The solution to a planning problem $\Pi = \langle \Xi, \mathcal{I}, G\rangle$ is a plan $\pi = \langle a_1, \dots, a_n\rangle$ such that:
-		\begin{itemize}
-			\item $\mathcal{I} \models \mathit{pre}(a_1)$
-			\item $\gamma(\gamma(\dots \gamma(I, a_1),\dots), a_n) \models G$
-			\item The cost of $\pi$ is $\sum_{i=1}^{n}\mathit{cost}(a_i)$
-		\end{itemize}
-	\end{frame}
+	% \begin{frame}[c]\frametitle{Solving Planning Problems}
+	% 	Actions $a \in \mathcal{A}$ are tuples $a = \langle \mathit{name}, \mathit{pre}(a), \mathit{eff}(a), \mathit{cost}(a) \rangle$.
+	% 	They induce a state transition system such that:
+	% 	\begin{itemize}
+	% 		\item $\mathit{eff}(a)$ constitute a set of negative (delete) and positive (add) effects: $\mathit{eff}^{+}(a)$, $\mathit{eff}^{-}(a)$
+	% 		\item an action $a$ is applicable to a state $s$ iff $s \models \mathit{pre}(a)$
+	% 		\item applying $a$ to $s$ ($\gamma(s,a)$) yields a state $s' = (s / \mathit{eff}^{-}(a)) \cup  \mathit{eff}^{+}(a)$, \\i.e. it is such that $s' \models \mathit{eff}(a)$
+	% 	\end{itemize}
+	% 	The solution to a planning problem $\Pi = \langle \Xi, \mathcal{I}, G\rangle$ is a plan $\pi = \langle a_1, \dots, a_n\rangle$ such that:
+	% 	\begin{itemize}
+	% 		\item $\mathcal{I} \models \mathit{pre}(a_1)$
+	% 		\item $\gamma(\gamma(\dots \gamma(I, a_1),\dots), a_n) \models G$
+	% 		\item The cost of $\pi$ is $\sum_{i=1}^{n}\mathit{cost}(a_i)$
+	% 	\end{itemize}
+	% \end{frame}
 	
 	\begin{frame}[c]\frametitle{From STRIPS Problem P to state model S(P)}
 		Most modern planning algorithms convert a planning problem $\Pi = \langle \Xi, \mathcal{I}, G\rangle$, with $\Xi = \langle \Sigma, \mathcal{A} \rangle$ into one of state space search, where:
@@ -520,7 +536,7 @@ morekeywords={defdomain,defproblem,:domain,:method,:operator
 		\begin{itemize}
 			\item Explicitly \textbf{searches} graph associated with model $S(P)$ with \textbf{heuristic} $h(s)$ that estimates cost from $s$ to goal
 			\item \textbf{Key idea:} Heuristic $h$ extracted automatically from problem $\Pi$
-			\item This is the mainstream approach in classical planning (and other forms of planning as well), enabling the solution of problems over \textbf{huge spaces} 
+			\item This is the mainstream approach in classical planning \\(and other forms of planning as well), \\ enabling the solution of problems over \textbf{huge spaces} 
 		\end{itemize}
 	\end{frame}
 	
@@ -741,7 +757,7 @@ morekeywords={defdomain,defproblem,:domain,:method,:operator
 		% \begin{itemize}
 % 			\item To extract landmarks and their ordering, we use an algorithm developed by Hoffman \emph{et al.} {\footnotesize (Ordered Landmarks in Planning. JAIR, 2004)}.
 % 		\end{itemize}
-    \end{frame}	
+    \end{frame}
 	
 	\begin{frame}[c]\frametitle{Computing Landmarks}
 		\begin{itemize}
@@ -757,7 +773,26 @@ morekeywords={defdomain,defproblem,:domain,:method,:operator
 			\item In our work we use an algorithm from Hoffman \emph{et al.} (2004) to compute an incomplete set of landmarks with a partial order relation
 		\end{itemize}
 	\end{frame}
+	
+	\begin{frame}[c]\frametitle{Computing Landmarks}
+		% \begin{columns}
+% 			\begin{column}{0.5\textwidth}
+% 			\includegraphics[width=\textwidth]{fig/blocksworld-landmarks-rpg.pdf}
+% 			\end{column}
+% 		\begin{column}{0.5\textwidth}
+% 			\includegraphics[width=\textwidth]{fig/blocksworld-landmarks-example.pdf}
+% 		\end{column}
+% 		\end{columns}
+
+		\begin{center}
+			\includegraphics[width=\textwidth]{fig/blocksworld-landmarks-rpg.pdf}
+		\end{center}
+		\vspace{-2cm}
+		Blocks World Problem\\
+		\includegraphics[width=.4\textwidth]{fig/blocksworld-landmarks-example.pdf}
+	\end{frame}
 \fi
+
 
 %---------------------------------------------------------------------------------
 
@@ -900,28 +935,32 @@ morekeywords={defdomain,defproblem,:domain,:method,:operator
     \begin{frame}{Example (2 of 4)}
 		\textbf{Achieved Landmarks in Observations:}
        	\begin{itemize}
-       		\item \texttt{(and (ontable D) (clear A) (on A D)), 5 out of 8}:
-				\begin{itemize}\scriptsize
+       		\item \texttt{(and (ontable D) (clear A) (on A D))}:%, 5 out of 8:
+				\begin{itemize}\scriptsize \setlength{\itemindent}{-3em}
 					% \item {\scriptsize \texttt{[(clear A)]}, \texttt{[(clear A) (ontable A) (handempty)]},
 % 					\\ \texttt{[(on C A) (clear C) (handempty)]}, \texttt{[(holding D)]},
 % 					\\ \texttt{[(clear D) (on D B) (handempty)]}}
-					\item \texttt{(clear a) $\rightarrow$ \achieved{[(on c a), (clear c), (handempty)]}, \achieved{[(clear a)]}}, 
-					\item \texttt{(on a d) $\rightarrow$ \achieved{[(on c a), (clear c), (handempty)]}, \break \achieved{[(clear a), (ontable a), (handempty)]}, \break [(holding a), (clear d)], [(on a d)]}, 
-					\item \texttt{(ontable d) $\rightarrow$ \achieved{[(clear d), (on d b), (handempty)]}, \achieved{[(holding d)]}, [(ontable d)]}
+					\item[] \texttt{(clear a) $\rightarrow$ \achieved{[(on c a), (clear c), (handempty)]}, \achieved{[(clear a)]}}, % 2 achieved 
+					\item[] \texttt{(on a d) $\rightarrow$ \achieved{[(on c a), (clear c), (handempty)]}, \break \achieved{[(clear a), (ontable a), (handempty)]}, \break [(holding a), (clear d)], [(on a d)]}, % 2 achieved
+					\item[] \texttt{(ontable d) $\rightarrow$ \achieved{[(clear d), (on d b), (handempty)]}, \achieved{[(holding d)]}, \break [(ontable d)]} % 2 achieved
 				\end{itemize}
 				
 			\item \texttt{(and (ontable D) (clear B) (on B D)), 4 out of 7}:
-				\begin{itemize}
-					\item {\scriptsize \texttt{[(clear B)]}, \texttt{[(ontable B) (handempty)]},
-					\\ \texttt{[(on D B) (clear D) (handempty)]}, \texttt{[(holding D)]}}
-					\item [clear b -> [[clear d, on d b, handempty], [clear b]], on b d -> [[ontable b, handempty], [clear d, holding b], [on b d]], ontable d -> [[clear d, on d b, handempty], [holding d], [ontable d]]]
+				\begin{itemize}\scriptsize \setlength{\itemindent}{-3em}
+					% \item {\scriptsize \texttt{[(clear B)]}, \texttt{[(ontable B) (handempty)]},
+% 					\\ \texttt{[(on D B) (clear D) (handempty)]}, \texttt{[(holding D)]}}
+					\item[] \texttt{(clear b) $\rightarrow$ \achieved{[(clear d), (on d b), (handempty)]}, \achieved{[(clear b)]}} % 2 achieved
+					\item[] \texttt{(on b d) $\rightarrow$ \achieved{[(ontable b), (handempty)]}, [(clear d), (holding b)], [(on b d)]} % 1 achieved 
+					\item[] \texttt{(ontable d) $\rightarrow$ \achieved{[(clear d), (on d b), (handempty)]}, \achieved{[(holding d)]}, \break [(ontable d)]} % 2 achieved
 				\end{itemize}
 			
 			\item \texttt{(and (ontable D) (clear C) (on C D)), 5 out of 7}:
-				\begin{itemize}
-					\item {\scriptsize \texttt{[(clear C)]}, \texttt{[(clear C) (on C A) (handempty)]}, \texttt{[(clear D) (holding C)]}
-					\\ \texttt{[(clear D) (on D B) (handempty)]}, \texttt{[(holding D)]}}
-					\item [on c d -> [[on c a, clear c, handempty], [holding c, clear d], [on c d]], ontable d -> [[clear d, on d b, handempty], [holding d], [ontable d]], clear c -> [[clear c]]]
+				\begin{itemize}\scriptsize \setlength{\itemindent}{-3em}
+					% \item {\scriptsize \texttt{[(clear C)]}, \texttt{[(clear C) (on C A) (handempty)]}, \texttt{[(clear D) (holding C)]}
+% 					\\ \texttt{[(clear D) (on D B) (handempty)]}, \texttt{[(holding D)]}}
+					\item[] \texttt{(on c d) $\rightarrow$ \achieved{[(on c a), (clear c), (handempty)]}, \achieved{[(holding c), (clear d)]}, [on c d]} % 2 achieved
+					\item[] \texttt{(ontable d) $\rightarrow$ \achieved{[(clear d), (on d b) (handempty)]}, \achieved{[(holding d)]}, [ontable d]} % 2 achieved 
+					\item[] \texttt{(clear c) $\rightarrow$ \achieved{[(clear c)]}} % 1 achieved
 				\end{itemize}
 		\end{itemize}
     \end{frame}
@@ -932,15 +971,16 @@ morekeywords={defdomain,defproblem,:domain,:method,:operator
        	\begin{itemize}
        		\item \texttt{(and (ontable D) (clear A) (on A D))}:%, 5 out of 8:
 				\begin{itemize}
-					\item Goal Completion: 0.7222
+					%\item Goal Completion: 0.7222
+					\item Goal Completion: $\displaystyle \frac{\frac{2}{2}+\frac{2}{4}+\frac{2}{3}}{3} =  0.7222$
 				\end{itemize}
 			\item \texttt{(and (ontable D) (clear B) (on B D))}:%, 4 out of 7:
 				\begin{itemize}
-					\item Goal Completion: 0.6666
+					\item Goal Completion: $\displaystyle \frac{\frac{2}{2}+\frac{1}{3}+\frac{2}{3}}{3} =  0.6666$
 				\end{itemize}
 			\item \texttt{(and (ontable D) (clear C) (on C D))}:%, 5 out of 7:
 				\begin{itemize}
-					\item \textbf{Goal Completion: 0.7777 (highest estimated value)}
+					\item Goal Completion: $\displaystyle \frac{\frac{2}{3}+\frac{2}{3}+\frac{1}{1}}{3} =  0.7733$ \textbf{(highest estimated value)}
 				\end{itemize}
 		\end{itemize}
     \end{frame}
@@ -963,7 +1003,7 @@ morekeywords={defdomain,defproblem,:domain,:method,:operator
 				\end{itemize}
 			\item \texttt{(and (ontable D) (clear C) (on C D))}, Total$_{Uniq}$ = 4.5:
 				\begin{itemize}
-					\item {\scriptsize \texttt{[(clear C)] = 1}, \texttt{[(clear C) (on C A) (handempty)] = 0.5},
+					\item {\scriptsize \texttt{[(clear C)] = 1}, \texttt{[(on C A) (clear C) (handempty)] = 0.5},
 					\\ \texttt{[(clear D) (holding C)] = 1}, \texttt{[(holding D)] = 0.3333}
 					\\ \texttt{[(clear D) (on D B) (handempty)] = 0.3333}}
 					\item $h_{uniq}$ = 3.1666 / 4.5 = 0.71
