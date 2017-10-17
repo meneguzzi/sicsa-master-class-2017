@@ -13,7 +13,9 @@ Here is the latest version of the Slides for the: [Master Class on Plan and Goal
 
 ## Webcast
 
-Video of the lecture is [available online](https://abdn.cloud.panopto.eu/Panopto/Pages/Viewer.aspx?id=2fe81832-8db7-4fe3-9f3d-432f3e539103)
+Video of the lecture is available online:
+- [Part 1](https://abdn.cloud.panopto.eu/Panopto/Pages/Viewer.aspx?id=2fe81832-8db7-4fe3-9f3d-432f3e539103)
+- [Part 2](https://abdn.cloud.panopto.eu/Panopto/Pages/Viewer.aspx?id=1762bae5-7ba0-41f9-a328-d44319081050)
 
 ## Program (17/10)
 
