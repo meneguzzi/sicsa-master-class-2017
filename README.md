@@ -11,6 +11,10 @@ Presented as the [SICSA Distinguished Visiting Fellow](http://www.sicsa.ac.uk/ev
 
 Here is the latest version of the Slides for the: [Master Class on Plan and Goal Recognition](sicsa-planrecognition.pdf)
 
+## Webcast
+
+Video of the lecture is [available online](https://abdn.cloud.panopto.eu/Panopto/Pages/Viewer.aspx?id=2fe81832-8db7-4fe3-9f3d-432f3e539103)
+
 ## Program (17/10)
 
 | Time    | Activity                 |  Location |
