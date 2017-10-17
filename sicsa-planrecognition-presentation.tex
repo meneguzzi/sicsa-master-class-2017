@@ -90,7 +90,7 @@ morekeywords={defdomain,defproblem,:domain,:method,:operator
 %---------------------------------------------------------------------------------
 \section{Introduction}
 
-\subsection[Test]{Motivation and Intuition}
+\subsection[Motivation]{Motivation and Intuition}
 	% \begin{frame}[c]\frametitle{Tentative Structure}
 % 		\begin{itemize}
 % 			\item Introduction to plan recognition (from Automated Planning)
@@ -130,19 +130,6 @@ morekeywords={defdomain,defproblem,:domain,:method,:operator
 				\item Domain-theory based (plan recognition as planning, or PRAP)
 			\end{itemize}
 		\end{itemize}
-	\end{frame}
-	
-	\begin{frame}[c]\frametitle{Flavors of Recognition Formalism}
-		\begin{columns}
-			\begin{column}[t]{0.5\textwidth}
-				Plan Library
-				\includegraphics[width=\textwidth]{examples/fig_plan_library.pdf}
-			\end{column}
-			\begin{column}[t]{0.5\textwidth}
-				Domain Theory (PRAP)
-				\lstinputlisting[basicstyle=\fontsize{4}{4.5}\selectfont,language=PDDL]{examples/easy_ipc_grid.pddl.txt}
-			\end{column}
-		\end{columns}
 	\end{frame}
 	
 	\begin{frame}[c]\frametitle{An example of Activity Recognition}
@@ -209,6 +196,19 @@ morekeywords={defdomain,defproblem,:domain,:method,:operator
 %---------------------------------------------------------------------------------
 \if\masterclass1
 \subsection{Formalism}
+
+	\begin{frame}[c]\frametitle{Flavors of Recognition Formalism}
+		\begin{columns}
+			\begin{column}[t]{0.5\textwidth}
+				Plan Library
+				\includegraphics[width=\textwidth]{examples/fig_plan_library.pdf}
+			\end{column}
+			\begin{column}[t]{0.5\textwidth}
+				Domain Theory (PRAP)
+				\lstinputlisting[basicstyle=\fontsize{4}{4.5}\selectfont,language=PDDL]{examples/easy_ipc_grid.pddl.txt}
+			\end{column}
+		\end{columns}
+	\end{frame}
 
 	\begin{frame}[c]\frametitle{Automated Planning}
 		\begin{definition} [\textbf{Planning}]
@@ -876,27 +876,27 @@ morekeywords={defdomain,defproblem,:domain,:method,:operator
 					% \item {\scriptsize \texttt{[(clear A)]}, \texttt{[(clear A) (ontable A) (handempty)]},
 % 					\\ \texttt{[(on C A) (clear C) (handempty)]}, \texttt{[(holding D)]},
 % 					\\ \texttt{[(clear D) (on D B) (handempty)]}}
+					\item[] \texttt{(ontable d) $\rightarrow$ \achieved{[(clear d), (on d b), (handempty)]}, \achieved{[(holding d)]}, \break [(ontable d)]} % 2 achieved
 					\item[] \texttt{(clear a) $\rightarrow$ \achieved{[(on c a), (clear c), (handempty)]}, \achieved{[(clear a)]}}, % 2 achieved 
 					\item[] \texttt{(on a d) $\rightarrow$ \achieved{[(on c a), (clear c), (handempty)]}, \break \achieved{[(clear a), (ontable a), (handempty)]}, \break [(holding a), (clear d)], [(on a d)]}, % 2 achieved
-					\item[] \texttt{(ontable d) $\rightarrow$ \achieved{[(clear d), (on d b), (handempty)]}, \achieved{[(holding d)]}, \break [(ontable d)]} % 2 achieved
 				\end{itemize}
 				
-			\item \texttt{(and (ontable D) (clear B) (on B D)), 4 out of 7}:
+			\item \texttt{(and (ontable D) (clear B) (on B D))}:%, 4 out of 7
 				\begin{itemize}\scriptsize \setlength{\itemindent}{-3em}
 					% \item {\scriptsize \texttt{[(clear B)]}, \texttt{[(ontable B) (handempty)]},
 % 					\\ \texttt{[(on D B) (clear D) (handempty)]}, \texttt{[(holding D)]}}
+					\item[] \texttt{(ontable d) $\rightarrow$ \achieved{[(clear d), (on d b), (handempty)]}, \achieved{[(holding d)]}, \break [(ontable d)]} % 2 achieved
 					\item[] \texttt{(clear b) $\rightarrow$ \achieved{[(clear d), (on d b), (handempty)]}, \achieved{[(clear b)]}} % 2 achieved
 					\item[] \texttt{(on b d) $\rightarrow$ \achieved{[(ontable b), (handempty)]}, [(clear d), (holding b)], [(on b d)]} % 1 achieved 
-					\item[] \texttt{(ontable d) $\rightarrow$ \achieved{[(clear d), (on d b), (handempty)]}, \achieved{[(holding d)]}, \break [(ontable d)]} % 2 achieved
 				\end{itemize}
 			
-			\item \texttt{(and (ontable D) (clear C) (on C D)), 5 out of 7}:
+			\item \texttt{(and (ontable D) (clear C) (on C D))}:%, 5 out of 7
 				\begin{itemize}\scriptsize \setlength{\itemindent}{-3em}
 					% \item {\scriptsize \texttt{[(clear C)]}, \texttt{[(clear C) (on C A) (handempty)]}, \texttt{[(clear D) (holding C)]}
 % 					\\ \texttt{[(clear D) (on D B) (handempty)]}, \texttt{[(holding D)]}}
-					\item[] \texttt{(on c d) $\rightarrow$ \achieved{[(on c a), (clear c), (handempty)]}, \achieved{[(holding c), (clear d)]}, [on c d]} % 2 achieved
 					\item[] \texttt{(ontable d) $\rightarrow$ \achieved{[(clear d), (on d b) (handempty)]}, \achieved{[(holding d)]}, [ontable d]} % 2 achieved 
 					\item[] \texttt{(clear c) $\rightarrow$ \achieved{[(clear c)]}} % 1 achieved
+					\item[] \texttt{(on c d) $\rightarrow$ \achieved{[(on c a), (clear c), (handempty)]}, \achieved{[(holding c), (clear d)]}, [on c d]} % 2 achieved
 				\end{itemize}
 		\end{itemize}
     \end{frame}
@@ -908,15 +908,15 @@ morekeywords={defdomain,defproblem,:domain,:method,:operator
        		\item \texttt{(and (ontable D) (clear A) (on A D))}:%, 5 out of 8:
 				\begin{itemize}
 					%\item Goal Completion: 0.7222
-					\item Goal Completion: $\displaystyle \frac{\frac{2}{2}+\frac{2}{4}+\frac{2}{3}}{3} =  0.7222$
+					\item Goal Completion: $\displaystyle \frac{\frac{2}{3}+\frac{2}{2}+\frac{2}{4}}{3} =  0.7222$
 				\end{itemize}
 			\item \texttt{(and (ontable D) (clear B) (on B D))}:%, 4 out of 7:
 				\begin{itemize}
-					\item Goal Completion: $\displaystyle \frac{\frac{2}{2}+\frac{1}{3}+\frac{2}{3}}{3} =  0.6666$
+					\item Goal Completion: $\displaystyle \frac{\frac{2}{3}+\frac{2}{2}+\frac{1}{3}}{3} =  0.6666$
 				\end{itemize}
 			\item \texttt{(and (ontable D) (clear C) (on C D))}:%, 5 out of 7:
 				\begin{itemize}
-					\item Goal Completion: $\displaystyle \frac{\frac{2}{3}+\frac{2}{3}+\frac{1}{1}}{3} =  0.7733$ \textbf{(highest estimated value)}
+					\item Goal Completion: $\displaystyle \frac{\frac{2}{3}+\frac{1}{1}+\frac{2}{3}}{3} =  0.7733$ \textbf{(highest estimated value)}
 				\end{itemize}
 		\end{itemize}
     \end{frame}
@@ -1285,12 +1285,16 @@ morekeywords={defdomain,defproblem,:domain,:method,:operator
 	\begin{frame}[c]\frametitle{Extracting Landmarks in Continuous Domains}
 		\begin{columns}
 			\begin{column}{0.5\textwidth}
-				\onslide<1->{
-					1. Partition landmarks using wall aligned squares. \\
-				}
-				\onslide<2->{
-					2. Recursively divide squares with multiple goals using the mid-point in $x,y$ between two randomly selected goals.
-				}
+				\begin{enumerate}
+					\item<1-> Partition landmarks using wall aligned squares.
+					\item<2-> Recursively divide squares with multiple goals using the mid-point in $x,y$ between two randomly selected goals.
+				\end{enumerate}
+				% \onslide<1->{
+% 					1. Partition landmarks using wall aligned squares. \\
+% 				}
+% 				\onslide<2->{
+% 					2. Recursively divide squares with multiple goals using the mid-point in $x,y$ between two randomly selected goals.
+% 				}
 			\end{column}
 			\begin{column}{0.5\textwidth}
 				\only<1>{
@@ -1335,29 +1339,29 @@ morekeywords={defdomain,defproblem,:domain,:method,:operator
 	\begin{frame}[c]\frametitle{Goal Mirroring with Landmarks}
 		Combines landmark reasoning with goal mirroring
 		\begin{columns}
-			\begin{column}{0.7\textwidth}
+			\begin{column}{0.9\textwidth}
 			\begin{itemize}
-				\item Compute landmarks and optimal plans for all goals
+				\item Compute landmarks and optimal plans $i_k$ for all goals
 				\item For every observation:\\
-				Compute plan prefix, and for every goal
+				Compute plan prefix $m^{-}$, and for every goal
 				% \begin{itemize}
 				% 	\item Compute plan prefix, and for every goal
 					\begin{itemize}
 						\item Either prune goals that have \textbf{passed} the last landmark; or
-						\item Compute plan suffix (from last observation) using planner
-						\item Compute \textbf{cost ratio} between prefix+suffix and optimal plan
+						\item Compute plan suffix $m_{k}^{+}$ (from last observation) using planner
+						\item Compute \textbf{cost ratio} between prefix+suffix and optimal plan: $P(O \mid g) = \frac{\textit{cost}(i_k)}{\textit{cost}(m^-) + \textit{cost}(m_k+)}$
 					\end{itemize}
 				% \end{itemize}
 				% \item Rank unpruned goals based on a \textbf{normalized cost ratio}
 			\end{itemize}
 			\end{column}
-			\begin{column}{0.3\textwidth}
-				\includegraphics[width=\textwidth]{fig/continuous-landmark-example.pdf}
-			\end{column}
+			% \begin{column}{0.3\textwidth}
+% 				\includegraphics[width=\textwidth]{fig/continuous-landmark-example.pdf}
+% 			\end{column}
 		\end{columns}
 		\begin{itemize}
 			\item Rank unpruned goals based on a \textbf{normalized cost ratio}\\
-			Computes $P(g_k \mid O)$ using a normalizing factor $\eta 1/\sum_{g_k \in G} rank(g_k)$
+			Computes $P(g_k \mid O)$ using a normalizing factor $\eta = 1/\sum_{g_k \in G} rank(g_k)$
 			% \item Ranks $P(g_k \mid O)$ using a normalizing factor $\eta 1/\sum_{g_k \in G} rank(g_k)$
 			\item Approximates $P(g \mid O) = \eta \sum_{g_k \in G} P(O \mid g_k) P(g_k)$ for all goals, assuming $P(g_k) = 0$ for pruned goals 
 		\end{itemize}
@@ -1702,7 +1706,7 @@ Solution:
 	\item Here, $[\inc{a},\inc{b},\inc{c}]$ is a valid plan that achieves the goal stated $\lbrace g \rbrace$ from the initial state $\lbrace p,q \rbrace$.
 	\item corresponds to  \textit{optimistic} state sequence:
 	$s_{0} =  \lbrace p,q \rbrace, s_{1} = \lbrace p,q,r \rbrace, s_{2} = \lbrace q,r \rbrace, s_{3} = \lbrace q,r,g \rbrace$.
-	\item This example has $2^{5}$ completion (2 possible preconditions and 3 possible effects).
+	\item This example has $2^{5}$ completions \\(2 possible preconditions and 3 possible effects)
 \end{itemize}
 \end{frame}
 
@@ -1842,9 +1846,9 @@ $$h_{\widetilde{GR}}(G) = \left(\frac{\mathcal{AL}_{G} + \mathcal{\widetilde{AL}
 	    \end{algorithmic}
 \end{frame}
 
-\begin{frame}[c]\frametitle{Algorithm Example}
-	\todo{Fill this in with an example}
-\end{frame}
+% \begin{frame}[c]\frametitle{Algorithm Example}
+% 	\todo{Fill this in with an example}
+% \end{frame}
 
 
 \subsection{Results}
